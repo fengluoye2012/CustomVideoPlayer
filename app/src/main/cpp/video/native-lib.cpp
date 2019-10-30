@@ -23,7 +23,7 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
  * void* fnPtr; native函数名
  */
 static JNINativeMethod gMethods[] = {
-        {"getString", "()Ljava/lang/String;", (void *) native_stringFromJNI},
+        {"getString", "()Ljava/lang/String;", (void *) native_stringFromJNI}
 };
 
 
@@ -48,15 +48,15 @@ jint registerNative(JNIEnv *env) {
 }
 
 jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *resetved) {
-    JNIEnv *env = NULL;
+    JNIEnv *env = nullptr;
     jint result = JNI_FALSE;
 
-    //获取env指针
-    if (jvm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_TRUE) {
+    //获取env指针；
+    if (jvm->GetEnv((void **) &env, JNI_VERSION_1_6) != JNI_OK) {
         return result;
     }
 
-    if (env == NULL) {
+    if (env == nullptr) {
         return result;
     }
 
