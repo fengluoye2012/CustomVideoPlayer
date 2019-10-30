@@ -9,8 +9,14 @@ cmake_minimum_required(VERSION 3.4.1)
 # 设置生成的so动态库最后输出的路径，
 # set后面两个参数， 前面一个是命令，后面是路径。
 #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI})
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/jniLibs/${ANDROID_ABI})
 
+
+#设置生成so库的名称，并为源文件提供一个相对路径
+#设置统配符
+# 将.cpp文件配置在CMakeLists.txt中，如果是在子目录下，
+file(GLOB native_srcs "${CMAKE_SOURCE_DIR}/src/main/cpp/video/*.cpp")
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -24,7 +30,7 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        src/main/cpp/native-lib.cpp)
+        ${native_srcs})
 
 # CMAKE_SOURCE_DIR CMAKE_SOURCE_DIR 表示CMakeLists.txt所在文件的根目录，如当前的根目录是app文件夹；
 #设置头文件目录
