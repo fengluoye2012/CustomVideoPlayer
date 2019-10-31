@@ -24,10 +24,8 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
 
     XParameter xParameter  = XParameter();
 
-    xParameter.setPara(ffDemux)
-
-    auto ffDecode =  new FFDecode();
-    ffDecode->open(xParameter);
+//    auto ffDecode =  new FFDecode();
+//    ffDecode->open(xParameter);
 
     return env->NewStringUTF(hello.c_str());
 }
