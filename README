@@ -1,0 +1,6 @@
+# 视频播放器流程
+
+解封转（Demux）--->编解码（Decode）--->渲染（视频OpenGL Shader，音频OpenGL ES）
+
+1、vector数据结构：https://www.runoob.com/w3cnote/cpp-vector-container-analysis.html
+push_back：向尾部添加一个元素；

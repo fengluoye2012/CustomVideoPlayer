@@ -14,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
+        TextView tv = findViewById(R.id.textView);
         tv.setText(MediaPlayer.getString());
     }
 

@@ -1,7 +1,11 @@
 #include <jni.h>
 #include <string>
+#include "XThread.h"
 
 #include "native-lib.h"
+#include "FFDemux.h"
+#include "LogUtils.h"
+#include "FFDecode.h"
 
 using namespace std;
 using std::string;
@@ -9,6 +13,21 @@ using std::string;
 
 jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
     string hello = "Hello from C++";
+
+    LOGI(TAG, "native_stringFromJNI");
+//
+//    auto *thread = new XThread();
+//    thread->start();
+
+    auto *ffDemux = new FFDemux();
+    ffDemux->open("http://dev.cdlianmeng.com/llQXenrPbCvvSiwHpr3QZtfWrKQt");
+
+    XParameter xParameter  = XParameter();
+
+    xParameter.setPara(ffDemux)
+
+    auto ffDecode =  new FFDecode();
+    ffDecode->open(xParameter);
 
     return env->NewStringUTF(hello.c_str());
 }

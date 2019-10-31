@@ -7,6 +7,8 @@
 
 #include <jni.h>
 
+#define TAG "native-lib"
+
 jstring native_stringFromJNI(JNIEnv *env, jobject obj);
 
 jint registerNative(JNIEnv *env);
