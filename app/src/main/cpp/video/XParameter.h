@@ -12,9 +12,6 @@ class XParameter {
 public:
     AVCodecParameters *para = nullptr;
 
-    AVCodecParameters *getPara() const;
-
-    void setPara(AVCodecParameters *para);
 
 };
 

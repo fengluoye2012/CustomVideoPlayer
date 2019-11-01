@@ -6,6 +6,7 @@
 #define CUSTOMVIDEOPLAYER_FFDEMUX_H
 
 #include "IDemux.h"
+#include "XParameter.h"
 
 struct AVFormatContext;
 
@@ -20,6 +21,13 @@ public:
     //打开文件或者流媒体
     virtual bool open(const char *url);
 
+    //获取视频参数
+    virtual XParameter getVPara();
+
+    //获取音频参数
+    virtual XParameter getAPara();
+
+
     //读取一帧数据 数据由调用者清理
     virtual Data read();
 
@@ -28,6 +36,8 @@ public:
 
 private:
     AVFormatContext *ic = nullptr;
+    int audioStream = -1;
+    int videoStream = -1;
 };
 
 

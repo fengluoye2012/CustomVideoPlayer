@@ -3,11 +3,3 @@
 //
 
 #include "XParameter.h"
-
-AVCodecParameters *XParameter::getPara() const {
-    return para;
-}
-
-void XParameter::setPara(AVCodecParameters *para) {
-    XParameter::para = para;
-}

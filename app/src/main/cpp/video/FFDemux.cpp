@@ -9,6 +9,24 @@ extern "C" {
 #include "libavformat/avformat.h"
 }
 
+
+FFDemux::FFDemux() {
+
+    static bool isFirst = true;
+    if (isFirst) {
+        isFirst = false;
+
+        //注册所有封装器
+        av_register_all();
+
+        //注册所有的解码器
+        avcodec_register_all();
+
+        //初始化网络，否则无法解码在线资源
+        avformat_network_init();
+    }
+}
+
 bool FFDemux::open(const char *url) {
 
     LOGI(TAG, "open file %s begin", url);
@@ -37,8 +55,54 @@ bool FFDemux::open(const char *url) {
 
     LOGI(TAG, "totalMs  == %d ", totalMs);
 
+    //获取音视频流下标，并且
+    getVPara();
+    getAPara();
+
     return true;
 }
+
+XParameter FFDemux::getVPara() {
+    if (!ic) {
+        return XParameter();
+    }
+
+    //获取视频流
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
+    if (index < 0) {
+        LOGI(TAG, "av_find_best_stream failed");
+        return XParameter();
+    }
+
+    videoStream = index;
+    LOGI(TAG, "视频流下标：：%d", videoStream);
+    XParameter para;
+    para.para = ic->streams[videoStream]->codecpar;
+    return para;
+}
+
+
+XParameter FFDemux::getAPara() {
+
+    if (!ic) {
+        return XParameter();
+    }
+
+    //获取视频流
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, 0, 0);
+    if (index < 0) {
+        LOGI(TAG, "av_find_best_stream failed");
+        return XParameter();
+    }
+
+    audioStream = index;
+    LOGI(TAG, "音频流下标：：%d", audioStream);
+    XParameter para;
+    para.para = ic->streams[audioStream]->codecpar;
+    return para;
+
+}
+
 
 Data FFDemux::read() {
     if (!ic) {
@@ -57,22 +121,14 @@ Data FFDemux::read() {
     d.data = reinterpret_cast<unsigned char *>(pkt);
     d.size = pkt->size;
 
-    return d;
-}
-
-FFDemux::FFDemux() {
-
-    static bool isFirst = true;
-    if (isFirst) {
-        isFirst = false;
-
-        //注册所有封装器
-        av_register_all();
-
-        //注册所有的解码器
-        avcodec_register_all();
-
-        //初始化网络，否则无法解码在线资源
-        avformat_network_init();
+    if (pkt->stream_index == audioStream) {
+        d.isAudio = true;
+    } else if (pkt->stream_index == videoStream) {
+        d.isAudio = true;
+    } else {
+        av_packet_free(&pkt);
+        return Data();
     }
+
+    return d;
 }

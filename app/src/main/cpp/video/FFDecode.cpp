@@ -40,5 +40,57 @@ bool FFDecode::open(XParameter para) {
 
     LOGI(TAG, "avcodec_open2 success");
 
+    if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+        this->isAudio = false;
+    } else if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
+        this->isAudio = true;
+    }
+
     return true;
+}
+
+bool FFDecode::sendPacket(Data pkt) {
+    if (pkt.size <= 0 || !pkt.data) {
+        return false;
+    }
+
+    if (!codec) {
+        return false;
+    }
+
+    int ret = avcodec_send_packet(codec, (AVPacket *) pkt.data);
+
+    return ret == 0;
+}
+
+//从线程中获取解码结果
+Data FFDecode::recvFrame() {
+
+    if (!codec) {
+        return Data();
+    }
+
+    if (!frame) {
+        frame = av_frame_alloc();
+    }
+
+    int ret = avcodec_receive_frame(codec, frame);
+
+    if (ret != 0) {
+        return Data();
+    }
+
+    Data data;
+    data.data = (unsigned char *) frame;
+
+    if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+        data.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2]) * frame->height;
+    } else if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
+        //样本字节数 * 单通道样本数*通道数
+        data.size = av_get_bytes_per_sample((AVSampleFormat) frame->format) * frame->nb_samples * 2;
+    } else {
+        return Data();
+    }
+
+    return data;
 }

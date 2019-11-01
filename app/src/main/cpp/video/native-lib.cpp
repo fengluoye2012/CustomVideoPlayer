@@ -15,17 +15,25 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
     string hello = "Hello from C++";
 
     LOGI(TAG, "native_stringFromJNI");
-//
-//    auto *thread = new XThread();
-//    thread->start();
 
-    auto *ffDemux = new FFDemux();
-    ffDemux->open("http://dev.cdlianmeng.com/llQXenrPbCvvSiwHpr3QZtfWrKQt");
+    auto *de = new FFDemux();
+    de->open("http://dev.cdlianmeng.com/llQXenrPbCvvSiwHpr3QZtfWrKQt");
 
-    XParameter xParameter  = XParameter();
+    auto *vdecode = new FFDecode();
+    vdecode->open(de->getVPara());
 
-//    auto ffDecode =  new FFDecode();
-//    ffDecode->open(xParameter);
+    auto *adevode = new FFDecode();
+    adevode->open(de->getAPara());
+
+    de->addObs(vdecode);
+    de->addObs(adevode);
+
+    de->start();
+    vdecode->start();
+    adevode->start();
+
+    //
+
 
     return env->NewStringUTF(hello.c_str());
 }
