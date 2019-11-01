@@ -24,6 +24,7 @@ FFDemux::FFDemux() {
 
         //初始化网络，否则无法解码在线资源
         avformat_network_init();
+        LOGI(TAG, "register success");
     }
 }
 
