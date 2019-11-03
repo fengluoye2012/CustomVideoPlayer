@@ -7,7 +7,6 @@
 
 #include "IDecode.h"
 
-#define TAG "FFDecode"
 
 struct AVCodecContext;
 struct AVFrame;

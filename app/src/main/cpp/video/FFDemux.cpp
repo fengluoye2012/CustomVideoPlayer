@@ -4,6 +4,7 @@
 
 #include "FFDemux.h"
 #include "LogUtils.h"
+#include "native-lib.h"
 
 extern "C" {
 #include "libavformat/avformat.h"

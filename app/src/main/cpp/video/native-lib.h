@@ -7,9 +7,12 @@
 
 #include <jni.h>
 
-#define TAG "native-lib"
+#define TAG "XPlay"
+
 
 jstring native_stringFromJNI(JNIEnv *env, jobject obj);
+
+void native_initView(JNIEnv *env,jobject obj,jobject surface);
 
 jint registerNative(JNIEnv *env);
 

@@ -6,9 +6,13 @@
 #include "FFDemux.h"
 #include "LogUtils.h"
 #include "FFDecode.h"
+#include <android/native_window_jni.h>
+#include "GLVideoView.h"
 
 using namespace std;
 using std::string;
+
+IVideoView *view = nullptr;
 
 
 jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
@@ -16,26 +20,32 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
 
     LOGI(TAG, "native_stringFromJNI");
 
-    auto *de = new FFDemux();
+    IDemux *de = new FFDemux();
     de->open("http://dev.cdlianmeng.com/llQXenrPbCvvSiwHpr3QZtfWrKQt");
 
-    auto *vdecode = new FFDecode();
+    IDecode *vdecode = new FFDecode();
     vdecode->open(de->getVPara());
 
-    auto *adevode = new FFDecode();
+    IDecode *adevode = new FFDecode();
     adevode->open(de->getAPara());
 
     de->addObs(vdecode);
     de->addObs(adevode);
 
+    view = new GLVideoView();
+    vdecode->addObs(view);
+
     de->start();
     vdecode->start();
     adevode->start();
 
-    //
-
 
     return env->NewStringUTF(hello.c_str());
+}
+
+void native_initView(JNIEnv *env, jobject obj, jobject surface) {
+    ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
+    view->setRender(win);
 }
 
 
@@ -48,7 +58,8 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
  * void* fnPtr; native函数名
  */
 static JNINativeMethod gMethods[] = {
-        {"getString", "()Ljava/lang/String;", (void *) native_stringFromJNI}
+        {"getString", "()Ljava/lang/String;",      (void *) native_stringFromJNI},
+        {"initView",  "(Landroid/view/Surface;)V", (void *) native_initView}
 };
 
 
@@ -71,6 +82,7 @@ jint registerNative(JNIEnv *env) {
     }
     return JNI_OK;
 }
+
 
 jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *resetved) {
     JNIEnv *env = nullptr;

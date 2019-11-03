@@ -5,6 +5,7 @@
 #include "XThread.h"
 #include "thread"
 #include "LogUtils.h"
+#include "native-lib.h"
 
 using namespace std;
 

@@ -3,6 +3,8 @@
 //
 
 #include "IDecode.h"
+#include "LogUtils.h"
+#include "native-lib.h"
 
 void IDecode::update(Data pkt) {
 
@@ -47,6 +49,8 @@ void IDecode::main() {
                 if (!frame.data) {
                     break;
                 }
+
+                LOGI(TAG, "RecvFrame %d", frame.size);
 
                 //发送数据给观察者
                 this->notify(frame);

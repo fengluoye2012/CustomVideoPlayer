@@ -10,9 +10,6 @@
 
 struct AVFormatContext;
 
-// 使用宏定义 定义TAG 避免使用全局变量；
-#define TAG "FFDemux"
-
 class FFDemux : public IDemux {
 
 public:

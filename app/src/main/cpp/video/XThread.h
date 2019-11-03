@@ -5,7 +5,6 @@
 #ifndef CUSTOMVIDEOPLAYER_XTHREAD_H
 #define CUSTOMVIDEOPLAYER_XTHREAD_H
 
-#define TAG "XThread"
 
 //单位是毫秒
 void XSleep(int mis);

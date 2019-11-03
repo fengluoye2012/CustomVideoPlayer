@@ -4,6 +4,7 @@
 
 #include "FFDecode.h"
 #include "LogUtils.h"
+#include "native-lib.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -28,9 +29,11 @@ bool FFDecode::open(XParameter para) {
     //2 创建解码上下文 并复制参数
     codec = avcodec_alloc_context3(cd);
     avcodec_parameters_to_context(codec, p);
+    //多线程解码
+    codec->thread_count = 8;
 
     //3 打开解码器
-    int ret = avcodec_open2(codec, 0, nullptr);
+    int ret = avcodec_open2(codec, nullptr, nullptr);
     if (ret != 0) {
         char buf[1024] = {0};
         av_strerror(ret, buf, sizeof(buf) - 1);
@@ -42,7 +45,7 @@ bool FFDecode::open(XParameter para) {
 
     if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
         this->isAudio = false;
-    } else if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
+    } else {
         this->isAudio = true;
     }
 
@@ -85,12 +88,14 @@ Data FFDecode::recvFrame() {
 
     if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
         data.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2]) * frame->height;
-    } else if (codec->codec_type == AVMEDIA_TYPE_AUDIO) {
+        data.width = frame->width;
+        data.height = frame->height;
+    } else {
         //样本字节数 * 单通道样本数*通道数
         data.size = av_get_bytes_per_sample((AVSampleFormat) frame->format) * frame->nb_samples * 2;
-    } else {
-        return Data();
     }
+
+    memcpy(data.datas, frame->data, sizeof(data.datas));
 
     return data;
 }

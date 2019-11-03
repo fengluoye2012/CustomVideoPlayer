@@ -1,6 +1,8 @@
 package com.test.customvideoplayer;
 
 
+import android.view.Surface;
+
 public class MediaPlayer {
 
     static {
@@ -8,6 +10,8 @@ public class MediaPlayer {
     }
 
     public static native String getString();
+
+    public static native void initView(Surface surface);
 
 
 }
