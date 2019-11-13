@@ -8,16 +8,17 @@
 #include "Data.h"
 #include "IObserver.h"
 
-class IVideoView : public IObserver{
+class IVideoView : public IObserver {
 
 public:
 
-    virtual  void setRender(void *win) = 0;
+    virtual void setRender(void *win) = 0;
 
-    virtual void render(Data data)= 0;
+    virtual void render(Data data) = 0;
 
     virtual void update(Data data);
 
+    virtual void close() = 0;
 };
 
 

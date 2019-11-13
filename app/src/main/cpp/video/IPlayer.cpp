@@ -13,7 +13,10 @@
 #include "IVideoView.h"
 
 bool IPlayer::start() {
+    mux.lock();
     if (!demux || !demux->start()) {
+        mux.unlock();
+        LOGE(TAG, "demux start failed");
         return false;
     }
 
@@ -28,6 +31,10 @@ bool IPlayer::start() {
     if (vDecode) {
         vDecode->start();
     }
+
+    XThread::start();
+    mux.unlock();
+
     return true;
 }
 
@@ -38,9 +45,12 @@ IPlayer *IPlayer::get(unsigned char index) {
 
 bool IPlayer::open(const char *path) {
 
+    mux.lock();
+
     //解封装
     if (!demux || !demux->open(path)) {
         LOGE(TAG, "demux open %s failed ", path);
+        mux.unlock();
         return false;
     }
 
@@ -61,12 +71,33 @@ bool IPlayer::open(const char *path) {
     if (!resample || resample->open(demux->getAPara(), outPara)) {
         LOGE(TAG, "resample->open %s failed", path);
     }
-
+    mux.unlock();
     return true;
 }
 
 void IPlayer::initView(void *win) {
-    if(videoView){
+    if (videoView) {
         videoView->setRender(win);
+    }
+}
+
+void IPlayer::main() {
+    while (!isExit) {
+        mux.lock();
+
+        if (!audioPlay || !vDecode) {
+            mux.unlock();
+            XSleep(2);
+            continue;
+        }
+
+        //同步
+        //获取音频的pts 告诉视频
+        int aPts = audioPlay->pts;
+        LOGE(TAG, "aPts == %d", aPts);
+        vDecode->synPts = aPts;
+
+        mux.unlock();
+        XSleep(2);
     }
 }

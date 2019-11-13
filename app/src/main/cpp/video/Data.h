@@ -13,8 +13,9 @@ enum DataType {
 
 struct Data {
     int type = 0;
-    unsigned char *data = 0;
+    int pts = 0;
 
+    unsigned char *data = 0;
     unsigned char *datas[8] = {0};
 
     int size = 0;
@@ -25,7 +26,6 @@ struct Data {
     int format = 0;
 
     bool Alloc(int size, const char *data = nullptr);
-
     void Drop();
 };
 

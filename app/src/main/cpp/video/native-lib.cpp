@@ -1,10 +1,8 @@
 #include <jni.h>
 #include <string>
-#include "XThread.h"
 
 #include "native-lib.h"
 #include "FFDemux.h"
-#include "LogUtils.h"
 #include "FFDecode.h"
 #include <android/native_window_jni.h>
 #include "GLVideoView.h"
@@ -13,65 +11,20 @@
 #include "IAudioPlay.h"
 #include "SLAudioPlay.h"
 #include "IPlayer.h"
+#include "IPlayerProxy.h"
 
 using namespace std;
 using std::string;
 
-IVideoView *view = nullptr;
-
-
 jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
     string hello = "Hello from C++";
-
-    LOGI(TAG, "native_stringFromJNI");
-
-    IDemux *de = new FFDemux();
-    //de->open("/sdcard/v1080.mp4");
-
-    IDecode *vdecode = new FFDecode();
-    //vdecode->open(de->getVPara());
-
-    IDecode *adevode = new FFDecode();
-    //adevode->open(de->getAPara());
-
-    de->addObs(vdecode);
-    de->addObs(adevode);
-
-    view = new GLVideoView();
-    vdecode->addObs(view);
-
-    IResample *resample = new FFResample();
-    adevode->addObs(resample);
-
-    IAudioPlay *audioPlay = new SLAudioPlay();
-    resample->addObs(audioPlay);
-
-
-    IPlayer::get()->demux = de;
-    IPlayer::get()->aDecode = adevode;
-    IPlayer::get()->videoView = view;
-
-    IPlayer::get()->resample = resample;
-    IPlayer::get()->audioPlay = audioPlay;
-
-    IPlayer::get()->open("/sdcard/v1080.mp4");
-    IPlayer::get()->start();
-
-
-    de->start();
-    vdecode->start();
-    adevode->start();
-
-
     return env->NewStringUTF(hello.c_str());
 }
 
 void native_initView(JNIEnv *env, jobject obj, jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
-    view->setRender(win);
-    IPlayer::get()->initView(win);
+    IPlayerProxy::get()->initView(win);
 }
-
 
 /**
  * 动态注册，每增加一个native方法，需要在数组中增加一个JNINativeMethod结构体；
@@ -124,8 +77,18 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     //native方法注册
     registerNative(env);
 
-    //初始化硬解码
-    FFDecode::initHard(jvm);
+    initFFmpeg(jvm);
+
     result = JNI_VERSION_1_6;
     return result;
+}
+
+void initFFmpeg(JavaVM *jvm) {
+    //初始化硬解码
+    IPlayerProxy::get()->init(jvm);
+
+    IPlayerProxy::get()->open("/sdcard/v1080.mp4");
+    IPlayerProxy::get()->start();
+
+
 }

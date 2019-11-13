@@ -14,14 +14,16 @@ class IDemux : public IObserver {
 
 public:
 
-    //纯虚函数  打开文件或者流媒体
+    //纯虚函数  打开文件或者流媒体 rmtp  http rtsp
     virtual bool open(const char *url) = 0;
 
+    virtual void close() = 0;
+
     //获取视频参数
-    virtual XParameter getVPara()=0;
+    virtual XParameter getVPara() = 0;
 
     //获取音频参数
-    virtual XParameter getAPara()=0;
+    virtual XParameter getAPara() = 0;
 
     //读取一帧数据，数据由调用者清理
     virtual Data read() = 0;

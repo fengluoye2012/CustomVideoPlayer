@@ -12,6 +12,8 @@ public:
 
     virtual bool init(void *win) = 0;
 
+    virtual void close() = 0;
+
     virtual void draw() = 0;
 
     static XEGL *get();

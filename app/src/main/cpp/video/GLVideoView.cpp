@@ -21,3 +21,12 @@ void GLVideoView::render(Data data) {
 
     txt->draw(data.datas, data.width, data.height);
 }
+
+void GLVideoView::close() {
+    mux.lock();
+    if (txt) {
+        txt->drop();
+        txt = nullptr;
+    }
+    mux.unlock();
+}

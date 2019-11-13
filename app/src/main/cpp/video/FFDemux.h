@@ -16,17 +16,19 @@ public:
 
     //重写父类方法
     //打开文件或者流媒体
-    virtual bool open(const char *url);
+    virtual bool open(const char *url) override;
+
+    void close() override;
 
     //获取视频参数
-    virtual XParameter getVPara();
+    virtual XParameter getVPara() override;
 
     //获取音频参数
-    virtual XParameter getAPara();
+    virtual XParameter getAPara() override;
 
 
     //读取一帧数据 数据由调用者清理
-    virtual Data read();
+    virtual Data read() override;
 
     //构造函数
     FFDemux();
@@ -35,6 +37,7 @@ private:
     AVFormatContext *ic = nullptr;
     int audioStream = -1;
     int videoStream = -1;
+    std::mutex mux;
 };
 
 

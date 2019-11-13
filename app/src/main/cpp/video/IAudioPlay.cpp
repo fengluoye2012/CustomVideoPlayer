@@ -29,9 +29,11 @@ Data IAudioPlay::getData() {
     while (!isExit) {
         framesMutex.lock();
         if (!frames.empty()) {
+            //有数据返回
             d = frames.front();
             frames.pop_front();
             framesMutex.unlock();
+            pts = d.pts;
             return d;
         }
 

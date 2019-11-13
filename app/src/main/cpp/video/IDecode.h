@@ -20,6 +20,8 @@ public:
     //打开解码器
     virtual bool open(XParameter para, bool isHard = false) = 0;
 
+    virtual void close() = 0;
+
     //future 模型 发送数据到线程解码
     virtual bool sendPacket(Data pkt) = 0;
 
@@ -33,6 +35,10 @@ public:
 
     //最大的队列缓存
     int maxList = 100;
+
+    //同步时间，再次打开文件要清理
+    int synPts = 0;
+    int pts = 0;
 
 protected:
     virtual void main() override;

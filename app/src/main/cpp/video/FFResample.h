@@ -14,10 +14,13 @@ class FFResample : public IResample {
 public:
     virtual bool open(XParameter in, XParameter out);
 
+    virtual void close() override;
+
     virtual Data resample(Data inData);
 
 protected:
     SwrContext *actx = nullptr;
+    std::mutex mux;
 };
 
 

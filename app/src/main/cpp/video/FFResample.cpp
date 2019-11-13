@@ -13,6 +13,9 @@ extern "C" {
 #include "native-lib.h"
 
 bool FFResample::open(XParameter in, XParameter out) {
+    close();
+
+    mux.lock();
 
     //音频重采样上下文初始化
     actx = swr_alloc();
@@ -23,6 +26,7 @@ bool FFResample::open(XParameter in, XParameter out) {
     int re = swr_init(actx);
 
     if (re != 0) {
+        mux.unlock();
         LOGE(TAG, "swr_init failed");
         return false;
     }
@@ -30,6 +34,7 @@ bool FFResample::open(XParameter in, XParameter out) {
 
     outChannels = in.para->channels;
     outFormat = AV_SAMPLE_FMT_S16;
+    mux.unlock();
     return true;
 }
 
@@ -39,7 +44,9 @@ Data FFResample::resample(Data inData) {
         return Data();
     }
 
+    mux.lock();
     if (!actx) {
+        mux.unlock();
         return Data();
     }
 
@@ -51,6 +58,7 @@ Data FFResample::resample(Data inData) {
             outChannels * frame->nb_samples * av_get_bytes_per_sample((AVSampleFormat) outFormat);
 
     if (outSize <= 0) {
+        mux.unlock();
         return Data();
     }
 
@@ -60,9 +68,21 @@ Data FFResample::resample(Data inData) {
     int len = swr_convert(actx, outArr, frame->nb_samples, (const uint8_t **) frame->data,
                           frame->nb_samples);
     if (len <= 0) {
+        mux.unlock();
         out.Drop();
         return Data();
     }
+
+    out.pts = inData.pts;
+    mux.unlock();
     LOGE(TAG, "swr_convert success");
     return out;
+}
+
+void FFResample::close() {
+    mux.lock();
+    if (actx) {
+        swr_free(&actx);
+    }
+    mux.unlock();
 }

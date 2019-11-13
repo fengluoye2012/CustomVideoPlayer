@@ -23,8 +23,11 @@ public:
 
     virtual bool startPlay(XParameter out) = 0;
 
+    virtual void close() = 0;
+
     //最大缓冲
     int maxFrame = 100;
+    int pts = 0;
 
 protected:
     std::list<Data> frames;

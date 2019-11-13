@@ -15,6 +15,8 @@ public:
     //纯虚函数，设置默认值
     virtual bool open(XParameter in, XParameter out = XParameter()) = 0;
 
+    virtual void close() = 0;
+
     virtual Data resample(Data inData) = 0;
 
     virtual void update(Data data);

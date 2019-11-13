@@ -13,15 +13,16 @@ class GLVideoView : public IVideoView {
 
 public:
 
-    virtual void setRender(void *win);
+    virtual void setRender(void *win) override;
 
-    virtual void render(Data data);
+    virtual void render(Data data) override;
 
+    virtual void close() override;
 
 protected:
     void *view = nullptr;
     XTexture *txt = nullptr;
-
+    std::mutex mux;
 };
 
 

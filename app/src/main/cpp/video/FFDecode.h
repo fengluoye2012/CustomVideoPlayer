@@ -18,6 +18,8 @@ public:
 
     virtual bool open(XParameter para, bool isHard = false) override;
 
+    void close() override;
+
     bool sendPacket(Data pkt) override;
 
     Data recvFrame() override;
@@ -25,8 +27,8 @@ public:
 protected:
 
     AVCodecContext *codec = nullptr;
-
     AVFrame *frame = nullptr;
+    std::mutex mux;
 };
 
 
