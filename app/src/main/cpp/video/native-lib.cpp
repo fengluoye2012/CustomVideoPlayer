@@ -12,6 +12,7 @@
 #include "SLAudioPlay.h"
 #include "IPlayer.h"
 #include "IPlayerProxy.h"
+#include "LogUtils.h"
 
 using namespace std;
 using std::string;
@@ -84,6 +85,7 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
 }
 
 void initFFmpeg(JavaVM *jvm) {
+
     //初始化硬解码
     IPlayerProxy::get()->init(jvm);
 

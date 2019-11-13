@@ -68,7 +68,7 @@ bool IPlayer::open(const char *path) {
         outPara = demux->getAPara();
     }
 
-    if (!resample || resample->open(demux->getAPara(), outPara)) {
+    if (!resample || !resample->open(demux->getAPara(), outPara)) {
         LOGE(TAG, "resample->open %s failed", path);
     }
     mux.unlock();
@@ -94,7 +94,7 @@ void IPlayer::main() {
         //同步
         //获取音频的pts 告诉视频
         int aPts = audioPlay->pts;
-        LOGE(TAG, "aPts == %d", aPts);
+       // LOGE(TAG, "aPts == %d", aPts);
         vDecode->synPts = aPts;
 
         mux.unlock();
