@@ -14,7 +14,7 @@ class XThread {
 public:
 
     //启动线程
-    virtual void start();
+    virtual bool start();
 
     //通过控制isExit安全停止线程（不一定成功）
     virtual void stop();

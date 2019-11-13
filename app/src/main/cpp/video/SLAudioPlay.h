@@ -12,7 +12,7 @@ class SLAudioPlay : public IAudioPlay {
 
 public:
 
-    virtual bool startPlay(XParameter out);
+    virtual bool startPlay(XParameter out) override;
 
     void playCall(void *bufq);
 

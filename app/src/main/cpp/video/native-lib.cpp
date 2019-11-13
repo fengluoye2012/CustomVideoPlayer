@@ -8,6 +8,11 @@
 #include "FFDecode.h"
 #include <android/native_window_jni.h>
 #include "GLVideoView.h"
+#include "IResample.h"
+#include "FFResample.h"
+#include "IAudioPlay.h"
+#include "SLAudioPlay.h"
+#include "IPlayer.h"
 
 using namespace std;
 using std::string;
@@ -21,19 +26,37 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
     LOGI(TAG, "native_stringFromJNI");
 
     IDemux *de = new FFDemux();
-    de->open("http://dev.cdlianmeng.com/llQXenrPbCvvSiwHpr3QZtfWrKQt");
+    //de->open("/sdcard/v1080.mp4");
 
     IDecode *vdecode = new FFDecode();
-    vdecode->open(de->getVPara());
+    //vdecode->open(de->getVPara());
 
     IDecode *adevode = new FFDecode();
-    adevode->open(de->getAPara());
+    //adevode->open(de->getAPara());
 
     de->addObs(vdecode);
     de->addObs(adevode);
 
     view = new GLVideoView();
     vdecode->addObs(view);
+
+    IResample *resample = new FFResample();
+    adevode->addObs(resample);
+
+    IAudioPlay *audioPlay = new SLAudioPlay();
+    resample->addObs(audioPlay);
+
+
+    IPlayer::get()->demux = de;
+    IPlayer::get()->aDecode = adevode;
+    IPlayer::get()->videoView = view;
+
+    IPlayer::get()->resample = resample;
+    IPlayer::get()->audioPlay = audioPlay;
+
+    IPlayer::get()->open("/sdcard/v1080.mp4");
+    IPlayer::get()->start();
+
 
     de->start();
     vdecode->start();
@@ -46,6 +69,7 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
 void native_initView(JNIEnv *env, jobject obj, jobject surface) {
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     view->setRender(win);
+    IPlayer::get()->initView(win);
 }
 
 
@@ -84,7 +108,7 @@ jint registerNative(JNIEnv *env) {
 }
 
 
-jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *resetved) {
+jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     JNIEnv *env = nullptr;
     jint result = JNI_FALSE;
 
@@ -100,7 +124,8 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *resetved) {
     //native方法注册
     registerNative(env);
 
-
+    //初始化硬解码
+    FFDecode::initHard(jvm);
     result = JNI_VERSION_1_6;
     return result;
 }

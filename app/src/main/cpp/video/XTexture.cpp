@@ -13,7 +13,7 @@ class CXTexture : public XTexture {
 public:
     XShader sh;
 
-    virtual bool init(void *win) {
+    virtual bool init(void *win,XTextureType type) {
         if (!win) {
             LOGE(TAG, "XTexture init failed win is NULL");
             return false;

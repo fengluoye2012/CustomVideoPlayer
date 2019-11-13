@@ -15,6 +15,14 @@ static SLObjectItf player = nullptr;
 static SLPlayItf iplayer = nullptr;
 static SLAndroidSimpleBufferQueueItf pcmQue = nullptr;
 
+SLAudioPlay::SLAudioPlay() {
+    buf = new unsigned char[1024 * 1024];
+}
+
+SLAudioPlay::~SLAudioPlay() {
+    delete buf;
+    buf = nullptr;
+}
 
 static SLEngineItf createSL() {
     SLresult re;
@@ -37,14 +45,37 @@ static SLEngineItf createSL() {
     return en;
 }
 
-SLAudioPlay::SLAudioPlay() {
-    buf = new unsigned char[1024 * 1024];
+void SLAudioPlay::playCall(void *bufq) {
+    if (!bufq) {
+        return;
+    }
 
+    SLAndroidSimpleBufferQueueItf bf = (SLAndroidSimpleBufferQueueItf) bufq;
+
+    //阻塞
+    Data d = getData();
+
+    if (d.size <= 0) {
+        LOGE(TAG, "getData() size is 0");
+        return;
+    }
+
+    if (!buf) {
+        return;
+    }
+
+    memcpy(buf, d.data, d.size);
+    (*bf)->Enqueue(bf, buf, d.size);
+    d.Drop();
 }
 
-SLAudioPlay::~SLAudioPlay() {
-    delete buf;
-    buf = nullptr;
+static void pcmCall(SLAndroidSimpleBufferQueueItf bf, void *context) {
+    SLAudioPlay *ap = (SLAudioPlay *) context;
+    if (!ap) {
+        LOGE(TAG, "pcmCall failed context is null");
+        return;
+    }
+    ap->playCall((void *) bf);
 }
 
 
@@ -77,7 +108,7 @@ bool SLAudioPlay::startPlay(XParameter out) {
     }
 
     SLDataLocator_OutputMix outmix = {SL_DATALOCATOR_OUTPUTMIX, mix};
-    SLDataSink audioSink = {&outmix, 0};
+    SLDataSink audioSink = {&outmix, nullptr};
 
     //3 配置音频信息
     //缓冲队列
@@ -100,13 +131,45 @@ bool SLAudioPlay::startPlay(XParameter out) {
     const SLInterfaceID ids[] = {SL_IID_BUFFERQUEUE};
     const SLboolean req[] = {SL_BOOLEAN_TRUE};
 
+    re = (*eng)->CreateAudioPlayer(eng, &player, &ds, &audioSink,
+                                   sizeof(ids) / sizeof(SLInterfaceID), ids, req);
 
-    return false;
+    if (re != SL_RESULT_SUCCESS) {
+        LOGE(TAG, "CreateAudioPlayer failed");
+        return false;
+    } else {
+        LOGE(TAG, "CreateAudioPlayer success");
+    }
+
+    (*player)->Realize(player, SL_BOOLEAN_FALSE);
+
+    //获取player接口
+    re = (*player)->GetInterface(player, SL_IID_PLAY, &iplayer);
+    if (re != SL_RESULT_SUCCESS) {
+        LOGE(TAG, "GetInterface SL_IID_PLAY  failed");
+        return false;
+    }
+
+    re = (*player)->GetInterface(player, SL_IID_BUFFERQUEUE, &pcmQue);
+    if (re != SL_RESULT_SUCCESS) {
+        LOGE(TAG, "GetInterface SL_IID_BUFFERQUEUE failed");
+        return false;
+    }
+
+    //设置回调函数，播放队列空调用
+    (*pcmQue)->RegisterCallback(pcmQue, pcmCall, this);
+
+    //设置为播放状态
+    (*iplayer)->SetPlayState(iplayer, SL_PLAYSTATE_PLAYING);
+
+    //启动队列回调
+    (*pcmQue)->Enqueue(pcmQue, "", 1);
+
+    LOGE(TAG, "SLAudioPlay::startPlay success");
+
+    return true;
 }
 
-void SLAudioPlay::playCall(void *bufq) {
 
-
-}
 
 

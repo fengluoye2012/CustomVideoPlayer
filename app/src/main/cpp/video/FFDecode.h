@@ -14,7 +14,9 @@ struct AVFrame;
 class FFDecode : public IDecode {
 public:
 
-    virtual bool open(XParameter para);
+    static void initHard(void *vm);
+
+    virtual bool open(XParameter para, bool isHard = false) override;
 
     bool sendPacket(Data pkt) override;
 

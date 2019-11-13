@@ -8,9 +8,15 @@
 
 extern "C" {
 #include <libavcodec/avcodec.h>
+#include <libavcodec/jni.h>
 }
 
-bool FFDecode::open(XParameter para) {
+
+void FFDecode::initHard(void *vm) {
+    av_jni_set_java_vm(vm, nullptr);
+}
+
+bool FFDecode::open(XParameter para, bool isHard) {
 
     if (!para.para) {
         return false;
@@ -20,6 +26,12 @@ bool FFDecode::open(XParameter para) {
 
     //1 查找解码器
     AVCodec *cd = avcodec_find_decoder(p->codec_id);
+
+    //硬解码
+    if (isHard) {
+        cd = avcodec_find_decoder_by_name("h264_mediacodec");
+    }
+
     if (!cd) {
         LOGI(TAG, "avcodec_find_decoder failed");
         return false;
@@ -99,3 +111,4 @@ Data FFDecode::recvFrame() {
 
     return data;
 }
+

@@ -114,8 +114,7 @@ target_link_libraries( # Specifies the target library.
         # shader渲染视频
         EGL
         GLESv2
-
-        ${OpenSLES-lib}
+        OpenSLES
 
         android
         ${log-lib})
