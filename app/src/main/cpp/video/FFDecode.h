@@ -10,6 +10,7 @@
 
 struct AVCodecContext;
 struct AVFrame;
+struct AVCodec;
 
 class FFDecode : public IDecode {
 public:
@@ -29,6 +30,7 @@ protected:
     AVCodecContext *codec = nullptr;
     AVFrame *frame = nullptr;
     std::mutex mux;
+    AVCodec *cd = nullptr;
 };
 
 

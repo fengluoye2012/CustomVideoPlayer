@@ -34,7 +34,6 @@ void IDecode::main() {
     while (!isExit) {
         packMutex.lock();
 
-
         //判断音视频同步
         if (!isAudio && synPts > 0) {
             if (synPts < pts) {
@@ -63,6 +62,7 @@ void IDecode::main() {
                 //获取解码数据
                 Data frame = recvFrame();
                 if (!frame.data) {
+                    LOGI(TAG, "frame.data 为null");
                     break;
                 }
 

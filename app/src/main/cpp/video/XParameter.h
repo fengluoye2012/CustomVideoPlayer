@@ -11,8 +11,9 @@ class XParameter {
 
 public:
     AVCodecParameters *para = nullptr;
-    int channels = 2;
-    int sample_rate = 44100;
+    //音频的参数
+    int channels = 2;//通道数
+    int sample_rate = 44100; // 采样率
 };
 
 

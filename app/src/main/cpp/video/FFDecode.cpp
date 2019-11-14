@@ -27,11 +27,11 @@ bool FFDecode::open(XParameter para, bool isHard) {
     AVCodecParameters *p = para.para;
 
     //1 查找解码器
-    AVCodec *cd = avcodec_find_decoder(p->codec_id);
+     cd = avcodec_find_decoder(p->codec_id);
 
     //硬解码
     if (isHard) {
-        cd = avcodec_find_decoder_by_name("h264_mediacodec");
+        //cd = avcodec_find_decoder_by_name("h264_mediacodec");
     }
 
     if (!cd) {
@@ -44,18 +44,27 @@ bool FFDecode::open(XParameter para, bool isHard) {
 
     //2 创建解码上下文 并复制参数
     codec = avcodec_alloc_context3(cd);
-    avcodec_parameters_to_context(codec, p);
+    int ret = avcodec_parameters_to_context(codec, p);
     //多线程解码
-    codec->thread_count = 8;
+    codec->thread_count = 2;
 
-    //3 打开解码器
-    int ret = avcodec_open2(codec, nullptr, nullptr);
-    if (ret != 0) {
-        char buf[1024] = {0};
-        av_strerror(ret, buf, sizeof(buf) - 1);
-        LOGI(TAG, "%s", buf);
+    if (ret < 0) {
+        mux.unlock();
+        LOGE(TAG, "avcodec_parameters_to_context faile");
         return false;
     }
+
+    //3 打开解码器，第一个参数可以使用null或者已经申请好的；
+    ret = avcodec_open2(codec, cd, nullptr);
+    if (ret != 0) {
+        mux.unlock();
+        char buf[1024] = {0};
+        av_strerror(ret, buf, sizeof(buf) - 1);
+        LOGI(TAG, "avcodec_open2  %s failed", buf);
+        return false;
+    }
+    ;
+    LOGI(TAG, "打开解码器成功==%s",cd->name);
 
     this->isAudio = !(codec->codec_type == AVMEDIA_TYPE_VIDEO);
     mux.unlock();
@@ -77,7 +86,7 @@ bool FFDecode::sendPacket(Data pkt) {
     }
 
     int ret = avcodec_send_packet(codec, (AVPacket *) pkt.data);
-    //LOGI(TAG,"avcodec_send_packet == %d",ret);
+    //LOGI(TAG, "avcodec_send_packet == %d", ret);
 
     mux.unlock();
     return ret == 0;
@@ -97,7 +106,7 @@ Data FFDecode::recvFrame() {
     }
 
     int ret = avcodec_receive_frame(codec, frame);
-    //LOGI(TAG,"avcodec_receive_frame == %d",ret); //返回的是-11；
+    LOGI(TAG, "avcodec_receive_frame == %d", ret); //返回的是-11；
 
     if (ret != 0) {
         mux.unlock();

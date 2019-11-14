@@ -47,6 +47,7 @@ bool FFDemux::open(const char *url) {
     LOGI(TAG, "open file %s begin", url);
     close();
 
+    mux.lock();
     int ret = avformat_open_input(&ic, url, nullptr, nullptr);
 
     if (ret != 0) {
@@ -75,7 +76,7 @@ bool FFDemux::open(const char *url) {
     mux.unlock();
     LOGI(TAG, "totalMs  == %d ", totalMs);
 
-    //获取音视频流下标，并且
+    //获取音视频流下标
     getVPara();
     getAPara();
 
@@ -87,11 +88,12 @@ XParameter FFDemux::getVPara() {
     mux.lock();
     if (!ic) {
         mux.unlock();
+        LOGI(TAG, "AVFormatContext == null");
         return XParameter();
     }
 
     //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
     if (index < 0) {
         mux.unlock();
         LOGI(TAG, "av_find_best_stream failed");
@@ -99,9 +101,9 @@ XParameter FFDemux::getVPara() {
     }
 
     videoStream = index;
-    LOGI(TAG, "视频流下标：：%d", videoStream);
+    LOGI(TAG, "视频流下标：：%d", index);
     XParameter para;
-    para.para = ic->streams[videoStream]->codecpar;
+    para.para = ic->streams[index]->codecpar;
     mux.unlock();
     return para;
 }
@@ -112,11 +114,12 @@ XParameter FFDemux::getAPara() {
     mux.lock();
     if (!ic) {
         mux.unlock();
+        LOGI(TAG, "AVFormatContext == null");
         return XParameter();
     }
 
     //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, 0, 0);
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
     if (index < 0) {
         mux.unlock();
         LOGI(TAG, "av_find_best_stream failed");
@@ -124,9 +127,12 @@ XParameter FFDemux::getAPara() {
     }
 
     audioStream = index;
-    LOGI(TAG, "音频流下标：：%d", audioStream);
+    LOGI(TAG, "音频流下标：：%d", index);
     XParameter para;
-    para.para = ic->streams[audioStream]->codecpar;
+    para.para = ic->streams[index]->codecpar;
+
+    para.channels = ic->streams[index]->codecpar->channels;
+    para.sample_rate = ic->streams[index]->codecpar->sample_rate;
     mux.unlock();
     return para;
 
