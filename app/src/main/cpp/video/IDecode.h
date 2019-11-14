@@ -29,7 +29,7 @@ public:
     virtual Data recvFrame() = 0;
 
     //由主体notify的数据 阻塞
-    virtual void update(Data pkt) override;
+    virtual void update(Data pkt) override ;
 
     bool isAudio = false;
 

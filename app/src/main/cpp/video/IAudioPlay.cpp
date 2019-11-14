@@ -3,9 +3,9 @@
 //
 
 #include "IAudioPlay.h"
+#include "LogUtils.h"
 
 void IAudioPlay::update(Data data) {
-
     //压入缓冲队列
     if (data.size <= 0 || !data.data) {
         return;

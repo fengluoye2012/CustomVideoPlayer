@@ -30,7 +30,7 @@ public:
 
 protected:
     //vector 数据结构
-    vector<IObserver *> obsVec;
+    vector<IObserver *> obss;
     //互斥锁
     mutex mux;
 };

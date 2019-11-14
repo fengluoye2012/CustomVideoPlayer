@@ -52,7 +52,7 @@ bool FFDemux::open(const char *url) {
     if (ret != 0) {
         mux.unlock();
         char buf[1024] = {0};
-        LOGI(TAG, "open file %s failed", url);
+        LOGE(TAG, "open file %s failed", url);
         av_strerror(ret, buf, sizeof(buf));
         return false;
     }

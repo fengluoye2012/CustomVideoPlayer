@@ -19,9 +19,13 @@ bool IPlayer::start() {
         LOGE(TAG, "demux start failed");
         return false;
     }
+    LOGI(TAG, "demux start success");
 
     if (aDecode) {
-        aDecode->start();
+        bool success = aDecode->start();
+        if (success) {
+            LOGI(TAG, "aDecode start success");
+        }
     }
 
     if (audioPlay) {
@@ -29,7 +33,10 @@ bool IPlayer::start() {
     }
 
     if (vDecode) {
-        vDecode->start();
+        bool success = vDecode->start();
+        if (success) {
+            LOGI(TAG, "vDecode start success");
+        }
     }
 
     XThread::start();
@@ -71,6 +78,7 @@ bool IPlayer::open(const char *path) {
     if (!resample || !resample->open(demux->getAPara(), outPara)) {
         LOGE(TAG, "resample->open %s failed", path);
     }
+    LOGI(TAG, "open %s success", path);
     mux.unlock();
     return true;
 }
@@ -94,7 +102,7 @@ void IPlayer::main() {
         //同步
         //获取音频的pts 告诉视频
         int aPts = audioPlay->pts;
-       // LOGE(TAG, "aPts == %d", aPts);
+        // LOGE(TAG, "aPts == %d", aPts);
         vDecode->synPts = aPts;
 
         mux.unlock();

@@ -77,6 +77,7 @@ bool FFDecode::sendPacket(Data pkt) {
     }
 
     int ret = avcodec_send_packet(codec, (AVPacket *) pkt.data);
+    //LOGI(TAG,"avcodec_send_packet == %d",ret);
 
     mux.unlock();
     return ret == 0;
@@ -96,6 +97,7 @@ Data FFDecode::recvFrame() {
     }
 
     int ret = avcodec_receive_frame(codec, frame);
+    //LOGI(TAG,"avcodec_receive_frame == %d",ret); //返回的是-11；
 
     if (ret != 0) {
         mux.unlock();

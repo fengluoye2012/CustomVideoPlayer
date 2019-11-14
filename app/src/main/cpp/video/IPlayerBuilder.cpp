@@ -8,8 +8,11 @@
 #include "IVideoView.h"
 #include "IResample.h"
 #include "IAudioPlay.h"
+#include "LogUtils.h"
+#include "native-lib.h"
 
 IPlayer *IPlayerBuilder::builderPlayer(unsigned char index) {
+    LOGI(TAG, "IPlayerBuilder builderPlayer");
 
     IPlayer *play = createPlayer(index);
 

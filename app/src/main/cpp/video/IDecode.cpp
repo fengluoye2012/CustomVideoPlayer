@@ -8,7 +8,7 @@
 
 //由主体notify 的数据
 void IDecode::update(Data pkt) {
-
+    LOGI(TAG, "IDecode::update");
     if (pkt.isAudio != isAudio) {
         return;
     }
@@ -19,7 +19,7 @@ void IDecode::update(Data pkt) {
         //阻塞
         if (packs.size() < maxList) {
             //生产者
-            packs.push_back(pkt);
+            packs.push_back(pkt);//在末尾添加一个元素
             packMutex.unlock();
             break;
         }
@@ -30,13 +30,16 @@ void IDecode::update(Data pkt) {
 
 
 void IDecode::main() {
+    LOGI(TAG, "IDecode::main  start");
     while (!isExit) {
         packMutex.lock();
+
 
         //判断音视频同步
         if (!isAudio && synPts > 0) {
             if (synPts < pts) {
                 packMutex.unlock();
+                //LOGI(TAG, "判断音视频同步");
                 XSleep(1);
                 continue;
             }
@@ -44,12 +47,14 @@ void IDecode::main() {
 
         if (packs.empty()) {
             packMutex.unlock();
+            //LOGI(TAG, "packs.empty()");
             XSleep(1);
             continue;
         }
 
+        LOGI(TAG, "取出packet 消费者");
         //取出packet 消费者
-        Data pack = packs.front();
+        Data pack = packs.front(); //删除第一个元素
         packs.pop_front();
 
         //发送数据到解码线程，
@@ -61,7 +66,7 @@ void IDecode::main() {
                     break;
                 }
 
-                //LOGI(TAG, "RecvFrame %d", frame.size);
+                LOGI(TAG, "RecvFrame %d", frame.size);
                 pts = frame.pts;
 
                 //发送数据给观察者
