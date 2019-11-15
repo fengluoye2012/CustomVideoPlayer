@@ -38,7 +38,6 @@ void IDecode::main() {
         if (!isAudio && synPts > 0) {
             if (synPts < pts) {
                 packMutex.unlock();
-                //LOGI(TAG, "判断音视频同步");
                 XSleep(1);
                 continue;
             }
@@ -46,7 +45,6 @@ void IDecode::main() {
 
         if (packs.empty()) {
             packMutex.unlock();
-            //LOGI(TAG, "packs.empty()");
             XSleep(1);
             continue;
         }
@@ -62,7 +60,6 @@ void IDecode::main() {
                 //获取解码数据
                 Data frame = recvFrame();
                 if (!frame.data) {
-                    LOGI(TAG, "frame.data 为null");
                     break;
                 }
 

@@ -54,7 +54,7 @@ public:
     }
 
     virtual bool init(void *win) override {
-        auto *nwin = (ANativeWindow *) win;
+        ANativeWindow *nwin = (ANativeWindow *) win;
 
         close();
         mux.lock();

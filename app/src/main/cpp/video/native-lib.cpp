@@ -63,6 +63,7 @@ jint registerNative(JNIEnv *env) {
 
 
 jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
+    mJvm = jvm;
     JNIEnv *env = nullptr;
     jint result = JNI_FALSE;
 
@@ -79,7 +80,6 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     registerNative(env);
 
     initFFmpeg(jvm);
-
     result = JNI_VERSION_1_6;
     return result;
 }

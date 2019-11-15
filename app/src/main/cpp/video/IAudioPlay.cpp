@@ -5,25 +5,6 @@
 #include "IAudioPlay.h"
 #include "LogUtils.h"
 
-void IAudioPlay::update(Data data) {
-    //压入缓冲队列
-    if (data.size <= 0 || !data.data) {
-        return;
-    }
-
-    while (!isExit) {
-        framesMutex.lock();
-        if (frames.size() > maxFrame) {
-            framesMutex.unlock();
-            XSleep(1);
-            continue;
-        }
-        frames.push_back(data);
-        framesMutex.unlock();
-        break;
-    }
-}
-
 Data IAudioPlay::getData() {
     Data d;
     while (!isExit) {
@@ -41,4 +22,24 @@ Data IAudioPlay::getData() {
         XSleep(1);
     }
     return d;
+}
+
+
+void IAudioPlay::update(Data data) {
+    //压入缓冲队列
+    if (data.size <= 0 || !data.data) {
+        return;
+    }
+
+    while (!isExit) {
+        framesMutex.lock();
+        if (frames.size() > maxFrame) {
+            framesMutex.unlock();
+            XSleep(1);
+            continue;
+        }
+        frames.push_back(data);
+        framesMutex.unlock();
+        break;
+    }
 }

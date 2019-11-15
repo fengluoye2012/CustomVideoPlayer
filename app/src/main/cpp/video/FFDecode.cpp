@@ -16,6 +16,20 @@ void FFDecode::initHard(void *vm) {
     av_jni_set_java_vm(vm, nullptr);
 }
 
+void FFDecode::close() {
+    mux.lock();
+    pts = 0;
+    if (frame) {
+        av_frame_free(&frame);
+    }
+
+    if (codec) {
+        avcodec_close(codec);
+        avcodec_free_context(&codec);
+    }
+    mux.unlock();
+}
+
 bool FFDecode::open(XParameter para, bool isHard) {
 
     close();
@@ -27,12 +41,12 @@ bool FFDecode::open(XParameter para, bool isHard) {
     AVCodecParameters *p = para.para;
 
     //1 查找解码器
-     cd = avcodec_find_decoder(p->codec_id);
+    AVCodec *cd = avcodec_find_decoder(p->codec_id);
 
     //硬解码
-    if (isHard) {
-        //cd = avcodec_find_decoder_by_name("h264_mediacodec");
-    }
+//    if (isHard) {
+//        cd = avcodec_find_decoder_by_name("h264_mediacodec");
+//    }
 
     if (!cd) {
         LOGI(TAG, "avcodec_find_decoder failed");
@@ -55,16 +69,15 @@ bool FFDecode::open(XParameter para, bool isHard) {
     }
 
     //3 打开解码器，第一个参数可以使用null或者已经申请好的；
-    ret = avcodec_open2(codec, cd, nullptr);
+    ret = avcodec_open2(codec, nullptr, nullptr);
     if (ret != 0) {
         mux.unlock();
         char buf[1024] = {0};
         av_strerror(ret, buf, sizeof(buf) - 1);
         LOGI(TAG, "avcodec_open2  %s failed", buf);
         return false;
-    }
-    ;
-    LOGI(TAG, "打开解码器成功==%s",cd->name);
+    };
+    LOGI(TAG, "打开解码器成功==%s", cd->name);
 
     this->isAudio = !(codec->codec_type == AVMEDIA_TYPE_VIDEO);
     mux.unlock();
@@ -105,6 +118,7 @@ Data FFDecode::recvFrame() {
         frame = av_frame_alloc();
     }
 
+    //avcodec_receive_packet()
     int ret = avcodec_receive_frame(codec, frame);
     LOGI(TAG, "avcodec_receive_frame == %d", ret); //返回的是-11；
 
@@ -113,37 +127,26 @@ Data FFDecode::recvFrame() {
         return Data();
     }
 
-    Data data;
-    data.data = (unsigned char *) frame;
+    Data d;
+    d.data = (unsigned char *) frame;
 
     if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {
-        data.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2]) * frame->height;
-        data.width = frame->width;
-        data.height = frame->height;
+        d.size = (frame->linesize[0] + frame->linesize[1] + frame->linesize[2]) * frame->height;
+        d.width = frame->width;
+        d.height = frame->height;
     } else {
         //样本字节数 * 单通道样本数*通道数
-        data.size = av_get_bytes_per_sample((AVSampleFormat) frame->format) * frame->nb_samples * 2;
+        d.size = av_get_bytes_per_sample((AVSampleFormat) frame->format) * frame->nb_samples * 2;
     }
 
-    memcpy(data.datas, frame->data, sizeof(data.datas));
-    data.pts = static_cast<int>(frame->pts);
-    pts = data.pts;
+    d.format = frame->format;
+    memcpy(d.datas, frame->data, sizeof(d.datas));
+    d.pts =frame->pts;
+    pts = d.pts;
     mux.unlock();
 
-    return data;
+    return d;
 }
 
-void FFDecode::close() {
-    mux.lock();
-    pts = 0;
-    if (frame) {
-        av_frame_free(&frame);
-    }
 
-    if (codec) {
-        avcodec_close(codec);
-        avcodec_free_context(&codec);
-    }
-    mux.unlock();
-}
 

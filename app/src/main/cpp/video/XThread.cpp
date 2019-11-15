@@ -23,6 +23,15 @@ bool XThread::start() {
     return true;
 }
 
+void XThread::threadMain() {
+    isRunning = true;
+    LOGI(TAG, "线程函数进入");
+    main();
+    LOGI(TAG, "线程函数退出");
+    isRunning = false;
+}
+
+
 void XThread::stop() {
     LOGI(TAG, "Stop 停止线程begin");
     isExit = true;
@@ -34,13 +43,4 @@ void XThread::stop() {
         XSleep(1);
     }
     LOGI(TAG, "Stop 停止线程超时");
-}
-
-
-void XThread::threadMain() {
-    isRunning = true;
-    LOGI(TAG, "线程函数进入");
-    main();
-    LOGI(TAG, "线程函数退出");
-    isRunning = false;
 }

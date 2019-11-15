@@ -9,6 +9,15 @@ void GLVideoView::setRender(void *win) {
     view = win;
 }
 
+void GLVideoView::close() {
+    mux.lock();
+    if (txt) {
+        txt->drop();
+        txt = nullptr;
+    }
+    mux.unlock();
+}
+
 void GLVideoView::render(Data data) {
     if (!view) {
         return;
@@ -22,11 +31,4 @@ void GLVideoView::render(Data data) {
     txt->draw(data.datas, data.width, data.height);
 }
 
-void GLVideoView::close() {
-    mux.lock();
-    if (txt) {
-        txt->drop();
-        txt = nullptr;
-    }
-    mux.unlock();
-}
+

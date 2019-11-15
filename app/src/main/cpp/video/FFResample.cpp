@@ -12,6 +12,14 @@ extern "C" {
 #include "LogUtils.h"
 #include "native-lib.h"
 
+void FFResample::close() {
+    mux.lock();
+    if (actx) {
+        swr_free(&actx);
+    }
+    mux.unlock();
+}
+
 bool FFResample::open(XParameter in, XParameter out) {
     close();
 
@@ -40,7 +48,7 @@ bool FFResample::open(XParameter in, XParameter out) {
 
 Data FFResample::resample(Data inData) {
 
-    if (inData.size <= 0 || inData.data) {
+    if (inData.size <= 0 || !inData.data) {
         return Data();
     }
 
@@ -58,7 +66,6 @@ Data FFResample::resample(Data inData) {
             outChannels * frame->nb_samples * av_get_bytes_per_sample((AVSampleFormat) outFormat);
 
     if (outSize <= 0) {
-        mux.unlock();
         return Data();
     }
 
@@ -79,10 +86,4 @@ Data FFResample::resample(Data inData) {
     return out;
 }
 
-void FFResample::close() {
-    mux.lock();
-    if (actx) {
-        swr_free(&actx);
-    }
-    mux.unlock();
-}
+

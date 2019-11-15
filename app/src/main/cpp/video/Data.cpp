@@ -8,17 +8,9 @@ extern "C" {
 #include <libavformat/avformat.h>
 }
 
-void Data::Drop() {
-    if (!data) {
-        return;
-    }
-    av_packet_free((AVPacket **) &data);
 
-    data = nullptr;
-    size = 0;
-}
 
-bool Data::Alloc(int size, const char *data) {
+bool Data::Alloc(int size, const char *d) {
 
     Drop();
     type = UCHAR_TYPE;
@@ -32,11 +24,27 @@ bool Data::Alloc(int size, const char *data) {
         return false;
     }
 
-    if (data) {
-        memcpy(this->data, data, size);
+    if (d) {
+        memcpy(this->data, d, size);
     }
 
     this->size = size;
 
     return true;
+}
+
+
+void Data::Drop() {
+    if (!data) {
+        return;
+    }
+
+    if (type == AVPACKET_TYPE) {
+        av_packet_free((AVPacket **) &data);
+    } else {
+        delete data;
+    }
+
+    data = nullptr;
+    size = 0;
 }

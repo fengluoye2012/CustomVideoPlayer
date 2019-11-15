@@ -41,7 +41,7 @@ public:
             return false;
         }
 
-        sh.init();
+        sh.init((XShaderType)type);
         mux.unlock();
         return true;
     }

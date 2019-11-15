@@ -15,25 +15,6 @@ static double r2q(AVRational r) {
     return r.num == 0 || r.den == 0 ? 0. : (double) r.num / (double) r.den;
 }
 
-
-FFDemux::FFDemux() {
-
-    static bool isFirst = true;
-    if (isFirst) {
-        isFirst = false;
-
-        //注册所有封装器
-        av_register_all();
-
-        //注册所有的解码器
-        avcodec_register_all();
-
-        //初始化网络，否则无法解码在线资源
-        avformat_network_init();
-        LOGI(TAG, "register success");
-    }
-}
-
 void FFDemux::close() {
     mux.lock();
     if (ic) {
@@ -71,7 +52,7 @@ bool FFDemux::open(const char *url) {
         return false;
     }
 
-    this->totalMs = static_cast<int>(ic->duration / (AV_TIME_BASE / 1000));
+    this->totalMs = ic->duration / (AV_TIME_BASE / 1000);
 
     mux.unlock();
     LOGI(TAG, "totalMs  == %d ", totalMs);
@@ -130,7 +111,6 @@ XParameter FFDemux::getAPara() {
     LOGI(TAG, "音频流下标：：%d", index);
     XParameter para;
     para.para = ic->streams[index]->codecpar;
-
     para.channels = ic->streams[index]->codecpar->channels;
     para.sample_rate = ic->streams[index]->codecpar->sample_rate;
     mux.unlock();
@@ -138,7 +118,7 @@ XParameter FFDemux::getAPara() {
 
 }
 
-
+//av_read_frame();
 Data FFDemux::read() {
     mux.lock();
     if (!ic) {
@@ -150,13 +130,15 @@ Data FFDemux::read() {
     AVPacket *pkt = av_packet_alloc();
     int ret = av_read_frame(ic, pkt);
 
+    LOGI(TAG, "av_read_frame code == %d", ret);
     if (ret != 0) {
         av_packet_free(&pkt);
-        mux.unlock();
         return Data();
     }
 
-    d.data = reinterpret_cast<unsigned char *>(pkt);
+    LOGI(TAG, "pack size is %d ptss %lld", pkt->size, pkt->pts);
+
+    d.data = (unsigned char *) pkt;
     d.size = pkt->size;
 
     if (pkt->stream_index == audioStream) {
@@ -176,6 +158,24 @@ Data FFDemux::read() {
 
     mux.unlock();
     return d;
+}
+
+FFDemux::FFDemux() {
+
+    static bool isFirst = true;
+    if (isFirst) {
+        isFirst = false;
+
+        //注册所有封装器
+        av_register_all();
+
+        //注册所有的解码器
+        avcodec_register_all();
+
+        //初始化网络，否则无法解码在线资源
+        avformat_network_init();
+        LOGI(TAG, "register success");
+    }
 }
 
 

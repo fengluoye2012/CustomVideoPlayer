@@ -20,12 +20,16 @@ class IAudioPlay;
 
 class IResample;
 
+
 class IPlayer : public XThread {
 
 public:
     static IPlayer *get(unsigned char index = 0);
+
     virtual bool open(const char *path);
-    virtual bool start() override ;
+
+    virtual bool start() override;
+
     virtual void initView(void *win);
 
     //是否视频硬解码

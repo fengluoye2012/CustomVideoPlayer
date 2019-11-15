@@ -12,42 +12,30 @@
 #include "IAudioPlay.h"
 #include "IVideoView.h"
 
-bool IPlayer::start() {
-    mux.lock();
-    if (!demux || !demux->start()) {
-        mux.unlock();
-        LOGE(TAG, "demux start failed");
-        return false;
-    }
-    LOGI(TAG, "demux start success");
-
-    if (aDecode) {
-        bool success = aDecode->start();
-        if (success) {
-            LOGI(TAG, "aDecode start success");
-        }
-    }
-
-    if (audioPlay) {
-        audioPlay->startPlay(outPara);
-    }
-
-    if (vDecode) {
-        bool success = vDecode->start();
-        if (success) {
-            LOGI(TAG, "vDecode start success");
-        }
-    }
-
-    XThread::start();
-    mux.unlock();
-
-    return true;
-}
-
 IPlayer *IPlayer::get(unsigned char index) {
     static IPlayer p[256];
     return &p[index];
+}
+
+void IPlayer::main() {
+    while (!isExit) {
+        mux.lock();
+
+        if (!audioPlay || !vDecode) {
+            mux.unlock();
+            XSleep(2);
+            continue;
+        }
+
+        //同步
+        //获取音频的pts 告诉视频
+        int aPts = audioPlay->pts;
+        // LOGE(TAG, "aPts == %d", aPts);
+        vDecode->synPts = aPts;
+
+        mux.unlock();
+        XSleep(2);
+    }
 }
 
 bool IPlayer::open(const char *path) {
@@ -83,29 +71,43 @@ bool IPlayer::open(const char *path) {
     return true;
 }
 
+bool IPlayer::start() {
+    mux.lock();
+    if (!demux || !demux->start()) {
+        mux.unlock();
+        LOGE(TAG, "demux start failed");
+        return false;
+    }
+    LOGI(TAG, "demux start success");
+
+    if (aDecode) {
+        bool success = aDecode->start();
+        if (success) {
+            LOGI(TAG, "aDecode start success");
+        }
+    }
+
+    if (audioPlay) {
+        audioPlay->startPlay(outPara);
+    }
+
+    if (vDecode) {
+        bool success = vDecode->start();
+        if (success) {
+            LOGI(TAG, "vDecode start success");
+        }
+    }
+
+    XThread::start();
+    mux.unlock();
+
+    return true;
+}
+
 void IPlayer::initView(void *win) {
     if (videoView) {
         videoView->setRender(win);
     }
 }
 
-void IPlayer::main() {
-    while (!isExit) {
-        mux.lock();
 
-        if (!audioPlay || !vDecode) {
-            mux.unlock();
-            XSleep(2);
-            continue;
-        }
-
-        //同步
-        //获取音频的pts 告诉视频
-        int aPts = audioPlay->pts;
-        // LOGE(TAG, "aPts == %d", aPts);
-        vDecode->synPts = aPts;
-
-        mux.unlock();
-        XSleep(2);
-    }
-}

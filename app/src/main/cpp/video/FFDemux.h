@@ -18,7 +18,7 @@ public:
     //打开文件或者流媒体
     virtual bool open(const char *url) override;
 
-    void close() override;
+    virtual void close() override;
 
     //获取视频参数
     virtual XParameter getVPara() override;
@@ -35,8 +35,8 @@ public:
 
 private:
     AVFormatContext *ic = nullptr;
-    int audioStream = -1;
-    int videoStream = -1;
+    int audioStream = 1;
+    int videoStream = 0;
     std::mutex mux;
 };
 

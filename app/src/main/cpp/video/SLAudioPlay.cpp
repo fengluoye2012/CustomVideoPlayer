@@ -80,6 +80,37 @@ static void pcmCall(SLAndroidSimpleBufferQueueItf bf, void *context) {
     ap->playCall((void *) bf);
 }
 
+void SLAudioPlay::close() {
+
+    mux.lock();
+
+    //停止播放
+    if (iplayer && (*iplayer)) {
+        (*iplayer)->SetPlayState(iplayer, SL_PLAYSTATE_STOPPED);
+    }
+
+    //清理播放队列
+    if (pcmQue && (*pcmQue)) {
+        (*pcmQue)->Clear(pcmQue);
+    }
+
+    //销毁player对象
+    if (player && (*player)) {
+        (*player)->Destroy(player);
+    }
+
+    //销毁混音器
+    if (mix && (*mix)) {
+        (*mix)->Destroy(mix);
+    }
+
+    //销毁播放引擎
+    if (engineSL && (*engineSL)) {
+        (*engineSL)->Destroy(engineSL);
+    }
+    mux.unlock();
+}
+
 
 bool SLAudioPlay::startPlay(XParameter out) {
 
@@ -183,36 +214,6 @@ bool SLAudioPlay::startPlay(XParameter out) {
 }
 
 
-void SLAudioPlay::close() {
-
-    mux.lock();
-
-    //停止播放
-    if (iplayer && (*iplayer)) {
-        (*iplayer)->SetPlayState(iplayer, SL_PLAYSTATE_STOPPED);
-    }
-
-    //清理播放队列
-    if (pcmQue && (*pcmQue)) {
-        (*pcmQue)->Clear(pcmQue);
-    }
-
-    //销毁player对象
-    if (player && (*player)) {
-        (*player)->Destroy(player);
-    }
-
-    //销毁混音器
-    if (mix && (*mix)) {
-        (*mix)->Destroy(mix);
-    }
-
-    //销毁播放引擎
-    if (engineSL && (*engineSL)) {
-        (*engineSL)->Destroy(engineSL);
-    }
-    mux.unlock();
-}
 
 
 

@@ -273,6 +273,17 @@ bool XShader::init(XShaderType type) {
     return true;
 }
 
+void XShader::draw() {
+    mux.lock();
+    if (!program) {
+        mux.unlock();
+        return;
+    }
+    //三维绘制
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    mux.unlock();
+}
+
 void XShader::getTexture(unsigned int index, int width, int height, unsigned char *buf, bool isa) {
     unsigned int format = GL_LUMINANCE;
     if (isa) {
@@ -311,16 +322,7 @@ void XShader::getTexture(unsigned int index, int width, int height, unsigned cha
     mux.unlock();
 }
 
-void XShader::draw() {
-    mux.lock();
-    if (!program) {
-        mux.unlock();
-        return;
-    }
-    //三维绘制
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-    mux.unlock();
-}
+
 
 
 

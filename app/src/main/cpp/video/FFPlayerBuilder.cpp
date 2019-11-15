@@ -9,10 +9,6 @@
 #include "GLVideoView.h"
 #include "SLAudioPlay.h"
 
-void FFPlayerBuilder::initHard(void *vm) {
-    FFDecode::initHard(vm);
-}
-
 IDemux *FFPlayerBuilder::createDemux() {
     IDemux *ff = new FFDemux();
     return ff;
@@ -40,4 +36,8 @@ IAudioPlay *FFPlayerBuilder::createAudioPlay() {
 
 IPlayer *FFPlayerBuilder::createPlayer(unsigned char index) {
     return IPlayer::get(index);
+}
+
+void FFPlayerBuilder::initHard(void *vm) {
+    FFDecode::initHard(vm);
 }

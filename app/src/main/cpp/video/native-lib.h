@@ -18,5 +18,7 @@ jint registerNative(JNIEnv *env);
 
 void initFFmpeg(JavaVM *jvm);
 
+static JavaVM *mJvm;
+
 
 #endif //CUSTOMVIDEOPLAYER_NATIVE_LIB_H

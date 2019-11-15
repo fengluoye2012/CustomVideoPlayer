@@ -6,11 +6,11 @@
 #define CUSTOMVIDEOPLAYER_FFDECODE_H
 
 #include "IDecode.h"
+#include "XParameter.h"
 
 
 struct AVCodecContext;
 struct AVFrame;
-struct AVCodec;
 
 class FFDecode : public IDecode {
 public:
@@ -19,18 +19,17 @@ public:
 
     virtual bool open(XParameter para, bool isHard = false) override;
 
-    void close() override;
+    virtual void close() override;
 
-    bool sendPacket(Data pkt) override;
+    virtual bool sendPacket(Data pkt) override;
 
-    Data recvFrame() override;
+    virtual Data recvFrame() override;
 
 protected:
 
     AVCodecContext *codec = nullptr;
     AVFrame *frame = nullptr;
     std::mutex mux;
-    AVCodec *cd = nullptr;
 };
 
 
