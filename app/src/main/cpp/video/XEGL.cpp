@@ -17,7 +17,7 @@ public:
     EGLContext context = EGL_NO_CONTEXT;
     std::mutex mux;
 
-    virtual void draw() override {
+    virtual void draw() {
         mux.lock();
         if (display == EGL_NO_DISPLAY || surface == EGL_NO_SURFACE) {
             mux.unlock();
@@ -28,7 +28,7 @@ public:
         mux.unlock();
     }
 
-    virtual void close() override {
+    virtual void close() {
         mux.lock();
         if (display == EGL_NO_DISPLAY) {
             mux.unlock();
@@ -53,7 +53,7 @@ public:
         mux.unlock();
     }
 
-    virtual bool init(void *win) override {
+    virtual bool init(void *win) {
         ANativeWindow *nwin = (ANativeWindow *) win;
 
         close();

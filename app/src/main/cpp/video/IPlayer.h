@@ -28,7 +28,7 @@ public:
 
     virtual bool open(const char *path);
 
-    virtual bool start() override;
+    virtual bool start();
 
     virtual void initView(void *win);
 

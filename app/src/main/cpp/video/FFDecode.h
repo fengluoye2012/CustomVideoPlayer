@@ -17,13 +17,13 @@ public:
 
     static void initHard(void *vm);
 
-    virtual bool open(XParameter para, bool isHard = false) override;
+    virtual bool open(XParameter para, bool isHard = false);
 
-    virtual void close() override;
+    virtual void close();
 
-    virtual bool sendPacket(Data pkt) override;
+    virtual bool sendPacket(Data pkt);
 
-    virtual Data recvFrame() override;
+    virtual Data recvFrame();
 
 protected:
 

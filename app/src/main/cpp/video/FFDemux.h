@@ -16,19 +16,19 @@ public:
 
     //重写父类方法
     //打开文件或者流媒体
-    virtual bool open(const char *url) override;
+    virtual bool open(const char *url);
 
-    virtual void close() override;
+    virtual void close();
 
     //获取视频参数
-    virtual XParameter getVPara() override;
+    virtual XParameter getVPara();
 
     //获取音频参数
-    virtual XParameter getAPara() override;
+    virtual XParameter getAPara();
 
 
     //读取一帧数据 数据由调用者清理
-    virtual Data read() override;
+    virtual Data read();
 
     //构造函数
     FFDemux();

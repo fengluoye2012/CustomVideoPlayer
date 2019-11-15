@@ -17,13 +17,13 @@ public:
         return &px;
     }
 
-    void init(void *vm = nullptr);
+    void init();
 
-    virtual bool open(const char *path) override;
+    virtual bool open(const char *path) ;
 
-    virtual bool start() override;
+    virtual bool start() ;
 
-    virtual void initView(void *win) override;
+    virtual void initView(void *win);
 
 protected:
     IPlayerProxy() {}

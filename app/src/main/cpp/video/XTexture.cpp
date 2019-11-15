@@ -16,7 +16,7 @@ public:
     XTextureType type;
     std::mutex mux;
 
-    virtual void drop() override {
+    virtual void drop() {
         mux.lock();
         XEGL::get()->close();
         sh.close();
@@ -24,7 +24,7 @@ public:
         delete this;
     }
 
-    virtual bool init(void *win, XTextureType type) override {
+    virtual bool init(void *win, XTextureType type) {
         mux.lock();
         XEGL::get()->close();
         sh.close();
@@ -46,7 +46,7 @@ public:
         return true;
     }
 
-    virtual void draw(unsigned char *data[], int width, int height) override {
+    virtual void draw(unsigned char *data[], int width, int height) {
         mux.lock();
 
         sh.getTexture(0, width, height, data[0]); //Y

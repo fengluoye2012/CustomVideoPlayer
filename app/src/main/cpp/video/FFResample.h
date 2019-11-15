@@ -14,7 +14,7 @@ class FFResample : public IResample {
 public:
     virtual bool open(XParameter in, XParameter out = XParameter());
 
-    virtual void close() override;
+    virtual void close();
 
     virtual Data resample(Data inData);
 

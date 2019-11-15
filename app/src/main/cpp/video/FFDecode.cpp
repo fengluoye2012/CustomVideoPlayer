@@ -60,7 +60,7 @@ bool FFDecode::open(XParameter para, bool isHard) {
     codec = avcodec_alloc_context3(cd);
     int ret = avcodec_parameters_to_context(codec, p);
     //多线程解码
-    codec->thread_count = 2;
+    codec->thread_count = 8;
 
     if (ret < 0) {
         mux.unlock();

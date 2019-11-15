@@ -29,7 +29,7 @@ public:
     virtual Data recvFrame() = 0;
 
     //由主体notify的数据 阻塞
-    virtual void update(Data pkt) override ;
+    virtual void update(Data pkt);
 
     bool isAudio = false;
 
@@ -41,7 +41,7 @@ public:
     int pts = 0;
 
 protected:
-    virtual void main() override;
+    virtual void main();
 
     //读取缓存
     std::list<Data> packs;

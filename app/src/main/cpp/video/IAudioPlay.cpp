@@ -21,6 +21,8 @@ Data IAudioPlay::getData() {
         framesMutex.unlock();
         XSleep(1);
     }
+
+    //未获取数据
     return d;
 }
 

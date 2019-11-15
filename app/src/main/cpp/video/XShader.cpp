@@ -10,12 +10,9 @@
 //顶点找色器glsl
 #define GET_STR(x) #x
 static const char *vertexShader = GET_STR(
-        attribute
-        vec4 aPosition; //顶点坐标
-        attribute
-        vec2 aTexCoord; //材质顶点坐标
-        varying
-        vec2 vTexCoord;   //输出的材质坐标
+        attribute vec4 aPosition; //顶点坐标
+        attribute vec2 aTexCoord; //材质顶点坐标
+        varying vec2 vTexCoord;   //输出的材质坐标
         void main() {
             vTexCoord = vec2(aTexCoord.x, 1.0 - aTexCoord.y);
             gl_Position = aPosition;
@@ -24,16 +21,11 @@ static const char *vertexShader = GET_STR(
 
 //片元着色器,软解码和部分x86硬解码
 static const char *fragYUV420P = GET_STR(
-        precision
-        mediump float;    //精度
-        varying
-        vec2 vTexCoord;     //顶点着色器传递的坐标
-        uniform
-        sampler2D yTexture; //输入的材质（不透明灰度，单像素）
-        uniform
-        sampler2D uTexture;
-        uniform
-        sampler2D vTexture;
+        precision mediump float;    //精度
+        varying vec2 vTexCoord;     //顶点着色器传递的坐标
+        uniform sampler2D yTexture; //输入的材质（不透明灰度，单像素）
+        uniform sampler2D uTexture;
+        uniform sampler2D vTexture;
         void main() {
             vec3 yuv;
             vec3 rgb;

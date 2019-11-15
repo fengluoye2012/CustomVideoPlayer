@@ -27,7 +27,6 @@ protected:
     bool isRunning = false;
 
 private:
-
     void threadMain();
 };
 

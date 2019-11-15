@@ -5,11 +5,11 @@
 #include "IPlayerProxy.h"
 #include "FFPlayerBuilder.h"
 
-void IPlayerProxy::init(void *vm) {
+void IPlayerProxy::init() {
     mux.lock();
-    if (vm) {
-        FFPlayerBuilder::initHard(vm);
-    }
+//    if (vm) {
+//        FFPlayerBuilder::initHard(vm);
+//    }
 
     if (!player) {
         player = FFPlayerBuilder::get()->builderPlayer();

@@ -16,7 +16,7 @@ void native_initView(JNIEnv *env,jobject obj,jobject surface);
 
 jint registerNative(JNIEnv *env);
 
-void initFFmpeg(JavaVM *jvm);
+void initFFmpeg();
 
 static JavaVM *mJvm;
 

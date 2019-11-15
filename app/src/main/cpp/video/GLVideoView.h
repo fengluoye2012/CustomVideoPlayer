@@ -13,11 +13,11 @@ class GLVideoView : public IVideoView {
 
 public:
 
-    virtual void setRender(void *win) override;
+    virtual void setRender(void *win);
 
-    virtual void render(Data data) override;
+    virtual void render(Data data);
 
-    virtual void close() override;
+    virtual void close();
 
 protected:
     void *view = nullptr;

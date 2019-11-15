@@ -21,17 +21,17 @@ protected:
 
     FFPlayerBuilder() {}
 
-    virtual IDemux *createDemux() override;
+    virtual IDemux *createDemux();
 
-    virtual IDecode *createDecode() override;
+    virtual IDecode *createDecode();
 
-    virtual IResample *createResample() override;
+    virtual IResample *createResample();
 
-    virtual IVideoView *createVideoView() override;
+    virtual IVideoView *createVideoView();
 
-    virtual IAudioPlay *createAudioPlay() override;
+    virtual IAudioPlay *createAudioPlay();
 
-    virtual IPlayer *createPlayer(unsigned char index) override;
+    virtual IPlayer *createPlayer(unsigned char index = 0);
 };
 
 
