@@ -18,7 +18,7 @@ void GLVideoView::close() {
     mux.unlock();
 }
 
-void GLVideoView::render(Data data) {
+void GLVideoView::render(XData data) {
     if (!view) {
         return;
     }

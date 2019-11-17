@@ -46,27 +46,27 @@ bool FFResample::open(XParameter in, XParameter out) {
     return true;
 }
 
-Data FFResample::resample(Data inData) {
+XData FFResample::resample(XData inData) {
 
     if (inData.size <= 0 || !inData.data) {
-        return Data();
+        return XData();
     }
 
     mux.lock();
     if (!actx) {
         mux.unlock();
-        return Data();
+        return XData();
     }
 
     AVFrame *frame = (AVFrame *) inData.data;
 
     //输出空间的分配
-    Data out;
+    XData out;
     int outSize =
             outChannels * frame->nb_samples * av_get_bytes_per_sample((AVSampleFormat) outFormat);
 
     if (outSize <= 0) {
-        return Data();
+        return XData();
     }
 
     out.Alloc(outSize);
@@ -77,7 +77,7 @@ Data FFResample::resample(Data inData) {
     if (len <= 0) {
         mux.unlock();
         out.Drop();
-        return Data();
+        return XData();
     }
 
     out.pts = inData.pts;

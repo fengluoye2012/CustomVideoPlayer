@@ -86,7 +86,7 @@ bool FFDecode::open(XParameter para, bool isHard) {
     return true;
 }
 
-bool FFDecode::sendPacket(Data pkt) {
+bool FFDecode::sendPacket(XData pkt) {
     if (pkt.size <= 0 || !pkt.data) {
         return false;
     }
@@ -110,21 +110,23 @@ bool FFDecode::sendPacket(Data pkt) {
 //        }
 //    }
 
-    while (!isExit) {
-        recvFrame();
-    }
+//    while (!isExit) {
+//        recvFrame();
+//    }
 
     mux.unlock();
-    return ret == 0;
+//    return ret == 0;
+    return false;
 }
 
 //从线程中获取解码结果
-Data FFDecode::recvFrame() {
+XData FFDecode::recvFrame() {
 
     mux.lock();
     if (!codec) {
+        LOGI(TAG, "codec == null");
         mux.unlock();
-        return Data();
+        return XData();
     }
     if (!frame) {
         frame = av_frame_alloc();
@@ -135,10 +137,10 @@ Data FFDecode::recvFrame() {
 
     if (ret != 0) {
         mux.unlock();
-        return Data();
+        return XData();
     }
 
-    Data d;
+    XData d;
     d.data = (unsigned char *) frame;
 
     if (codec->codec_type == AVMEDIA_TYPE_VIDEO) {

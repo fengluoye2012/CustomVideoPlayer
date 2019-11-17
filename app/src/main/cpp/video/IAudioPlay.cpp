@@ -5,8 +5,8 @@
 #include "IAudioPlay.h"
 #include "LogUtils.h"
 
-Data IAudioPlay::getData() {
-    Data d;
+XData IAudioPlay::getData() {
+    XData d;
     while (!isExit) {
         framesMutex.lock();
         if (!frames.empty()) {
@@ -27,7 +27,7 @@ Data IAudioPlay::getData() {
 }
 
 
-void IAudioPlay::update(Data data) {
+void IAudioPlay::update(XData data) {
     //压入缓冲队列
     if (data.size <= 0 || !data.data) {
         return;

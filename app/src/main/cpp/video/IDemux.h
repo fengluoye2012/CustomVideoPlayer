@@ -6,7 +6,7 @@
 #define CUSTOMVIDEOPLAYER_IDEMUX_H
 
 #include "IObserver.h"
-#include "Data.h"
+#include "XData.h"
 #include "XParameter.h"
 
 //解封装接口
@@ -26,7 +26,7 @@ public:
     virtual XParameter getAPara() = 0;
 
     //读取一帧数据，数据由调用者清理
-    virtual Data read() = 0;
+    virtual XData read() = 0;
 
     //总时长（毫秒）
     int totalMs = 0;

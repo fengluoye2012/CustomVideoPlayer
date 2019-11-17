@@ -15,10 +15,10 @@ class IAudioPlay : public IObserver {
 public:
 
     //缓冲满后 阻塞
-    virtual void update(Data data);
+    virtual void update(XData data);
 
     //获取缓冲数据，如果没有 则阻塞
-    virtual Data getData();
+    virtual XData getData();
 
 
     virtual bool startPlay(XParameter out) = 0;
@@ -30,7 +30,7 @@ public:
     int pts = 0;
 
 protected:
-    std::list<Data> frames;
+    std::list<XData> frames;
     std::mutex framesMutex;
 };
 

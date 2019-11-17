@@ -23,7 +23,7 @@ void IObserver::addObs(IObserver *obs) {
 }
 
 
-void IObserver::notify(Data data) {
+void IObserver::notify(XData data) {
     mux.lock();
     for (int i = 0; i < obss.size(); i++) {
         //调用update();

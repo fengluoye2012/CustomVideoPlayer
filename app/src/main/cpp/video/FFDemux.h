@@ -28,7 +28,7 @@ public:
 
 
     //读取一帧数据 数据由调用者清理
-    virtual Data read();
+    virtual XData read();
 
     //构造函数
     FFDemux();

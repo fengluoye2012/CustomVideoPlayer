@@ -7,7 +7,7 @@
 #include "native-lib.h"
 
 //由主体notify 的数据
-void IDecode::update(Data pkt) {
+void IDecode::update(XData pkt) {
     LOGI(TAG, "IDecode::update");
     if (pkt.isAudio != isAudio) {
         return;
@@ -51,7 +51,7 @@ void IDecode::main() {
 
         LOGI(TAG, "取出packet 消费者");
         //取出packet 消费者
-        Data pack = packs.front(); //删除第一个元素
+        XData pack = packs.front(); //删除第一个元素
         packs.pop_front();
 
         //发送数据到解码线程，
@@ -59,7 +59,7 @@ void IDecode::main() {
             //while (!isExit) {
             while (true) {
                 //获取解码数据
-                Data frame = recvFrame();
+                XData frame = recvFrame();
                 if (!frame.data) {
                     break;
                 }

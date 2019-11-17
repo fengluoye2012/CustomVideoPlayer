@@ -53,7 +53,7 @@ void SLAudioPlay::playCall(void *bufq) {
     SLAndroidSimpleBufferQueueItf bf = (SLAndroidSimpleBufferQueueItf) bufq;
 
     //阻塞
-    Data d = getData();
+    XData d = getData();
 
     if (d.size <= 0) {
         LOGE(TAG, "getData() size is 0");

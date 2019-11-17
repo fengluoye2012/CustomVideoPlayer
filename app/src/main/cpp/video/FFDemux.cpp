@@ -119,21 +119,21 @@ XParameter FFDemux::getAPara() {
 }
 
 //av_read_frame();
-Data FFDemux::read() {
+XData FFDemux::read() {
     mux.lock();
     if (!ic) {
         mux.unlock();
-        return Data();
+        return XData();
     }
 
-    Data d;
+    XData d;
     AVPacket *pkt = av_packet_alloc();
     int ret = av_read_frame(ic, pkt);
 
     LOGI(TAG, "av_read_frame code == %d", ret);
     if (ret != 0) {
         av_packet_free(&pkt);
-        return Data();
+        return XData();
     }
 
     LOGI(TAG, "pack size is %d ptss %lld", pkt->size, pkt->pts);
@@ -148,7 +148,7 @@ Data FFDemux::read() {
     } else {
         av_packet_free(&pkt);
         mux.unlock();
-        return Data();
+        return XData();
     }
 
     //转换pts

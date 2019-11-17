@@ -17,9 +17,9 @@ public:
 
     virtual void close() = 0;
 
-    virtual Data resample(Data inData) = 0;
+    virtual XData resample(XData inData) = 0;
 
-    virtual void update(Data data);
+    virtual void update(XData data);
 
     int outChannels = 2;
     int outFormat = 1;

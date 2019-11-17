@@ -5,7 +5,7 @@
 #ifndef CUSTOMVIDEOPLAYER_IVIDEOVIEW_H
 #define CUSTOMVIDEOPLAYER_IVIDEOVIEW_H
 
-#include "Data.h"
+#include "XData.h"
 #include "IObserver.h"
 
 class IVideoView : public IObserver {
@@ -14,9 +14,9 @@ public:
 
     virtual void setRender(void *win) = 0;
 
-    virtual void render(Data data) = 0;
+    virtual void render(XData data) = 0;
 
-    virtual void update(Data data);
+    virtual void update(XData data);
 
     virtual void close() = 0;
 };

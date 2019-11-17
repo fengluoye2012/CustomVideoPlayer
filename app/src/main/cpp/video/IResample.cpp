@@ -4,8 +4,8 @@
 
 #include "IResample.h"
 
-void IResample::update(Data data) {
-    Data d = this->resample(data);
+void IResample::update(XData data) {
+    XData d = this->resample(data);
     if (d.size > 0) {
         this->notify(d);
     }

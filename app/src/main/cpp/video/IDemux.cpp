@@ -3,13 +3,13 @@
 //
 
 #include "IDemux.h"
-#include "Data.h"
+#include "XData.h"
 #include "LogUtils.h"
 #include "native-lib.h"
 
 void IDemux::main() {
     while (!isExit) {
-        Data data = read();
+        XData data = read();
 
         if (data.size > 0) {
             //LOGI(TAG,"IDemux::main");

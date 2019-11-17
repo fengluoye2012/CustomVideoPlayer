@@ -21,9 +21,9 @@ public:
 
     virtual void close();
 
-    virtual bool sendPacket(Data pkt);
+    virtual bool sendPacket(XData pkt);
 
-    virtual Data recvFrame();
+    virtual XData recvFrame();
 
 protected:
 

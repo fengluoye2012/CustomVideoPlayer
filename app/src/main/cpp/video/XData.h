@@ -11,7 +11,7 @@ enum DataType {
 };
 
 
-struct Data {
+struct XData {
     int type = 0;
     int pts = 0;
 

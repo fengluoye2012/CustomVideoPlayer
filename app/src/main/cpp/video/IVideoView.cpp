@@ -4,6 +4,6 @@
 
 #include "IVideoView.h"
 
-void IVideoView::update(Data data) {
+void IVideoView::update(XData data) {
     this->render(data);
 }

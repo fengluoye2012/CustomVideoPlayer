@@ -8,7 +8,7 @@
 
 #include "IObserver.h"
 #include "XParameter.h"
-#include "Data.h"
+#include "XData.h"
 #include <list>
 
 
@@ -23,13 +23,13 @@ public:
     virtual void close() = 0;
 
     //future 模型 发送数据到线程解码
-    virtual bool sendPacket(Data pkt) = 0;
+    virtual bool sendPacket(XData pkt) = 0;
 
     //从线程中获取编解码结果 再次调用会复用上次空间，线程不安全；
-    virtual Data recvFrame() = 0;
+    virtual XData recvFrame() = 0;
 
     //由主体notify的数据 阻塞
-    virtual void update(Data pkt);
+    virtual void update(XData pkt);
 
     bool isAudio = false;
 
@@ -44,7 +44,7 @@ protected:
     virtual void main();
 
     //读取缓存
-    std::list<Data> packs;
+    std::list<XData> packs;
     std::mutex packMutex;
 };
 

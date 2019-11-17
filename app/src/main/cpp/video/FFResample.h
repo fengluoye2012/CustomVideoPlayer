@@ -16,7 +16,7 @@ public:
 
     virtual void close();
 
-    virtual Data resample(Data inData);
+    virtual XData resample(XData inData);
 
 protected:
     SwrContext *actx = nullptr;
