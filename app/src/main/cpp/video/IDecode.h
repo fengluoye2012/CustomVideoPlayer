@@ -13,19 +13,16 @@
 
 
 //解码接口 支持硬解码
-class IDecode : public IObserver {
-
+class IDecode:public IObserver
+{
 public:
-
     //打开解码器
-    virtual bool open(XParameter para, bool isHard = false) = 0;
-
+    virtual bool open(XParameter para,bool isHard=false) = 0;
     virtual void close() = 0;
-
-    //future 模型 发送数据到线程解码
+    //future模型 发送数据到线程解码
     virtual bool sendPacket(XData pkt) = 0;
 
-    //从线程中获取编解码结果 再次调用会复用上次空间，线程不安全；
+    //从线程中获取解码结果  再次调用会复用上次空间，线程不安全
     virtual XData recvFrame() = 0;
 
     //由主体notify的数据 阻塞
@@ -33,7 +30,7 @@ public:
 
     bool isAudio = false;
 
-    //最大的队列缓存
+    //最大的队列缓冲
     int maxList = 100;
 
     //同步时间，再次打开文件要清理
@@ -43,9 +40,11 @@ public:
 protected:
     virtual void main();
 
-    //读取缓存
+    //读取缓冲
     std::list<XData> packs;
-    std::mutex packMutex;
+    std::mutex packsMutex;
+
+
 };
 
 
