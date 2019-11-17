@@ -101,6 +101,19 @@ bool FFDecode::sendPacket(Data pkt) {
     int ret = avcodec_send_packet(codec, (AVPacket *) pkt.data);
     //LOGI(TAG, "avcodec_send_packet == %d", ret);
 
+//    AVFrame *avFrame = av_frame_alloc();
+//    while (!isExit) {
+//        int code = avcodec_receive_frame(codec, avFrame);
+//        LOGI(TAG, "avcodec_receive_frame == %d", ret);
+//        if (code != 0) {
+//            break;
+//        }
+//    }
+
+    while (!isExit) {
+        recvFrame();
+    }
+
     mux.unlock();
     return ret == 0;
 }
@@ -113,12 +126,10 @@ Data FFDecode::recvFrame() {
         mux.unlock();
         return Data();
     }
-
     if (!frame) {
         frame = av_frame_alloc();
     }
 
-    //avcodec_receive_packet()
     int ret = avcodec_receive_frame(codec, frame);
     LOGI(TAG, "avcodec_receive_frame == %d", ret); //返回的是-11；
 
@@ -141,7 +152,7 @@ Data FFDecode::recvFrame() {
 
     d.format = frame->format;
     memcpy(d.datas, frame->data, sizeof(d.datas));
-    d.pts =frame->pts;
+    d.pts = frame->pts;
     pts = d.pts;
     mux.unlock();
 

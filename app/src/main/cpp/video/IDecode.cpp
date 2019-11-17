@@ -56,7 +56,8 @@ void IDecode::main() {
 
         //发送数据到解码线程，
         while (this->sendPacket(pack)) {
-            while (!isExit) {
+            //while (!isExit) {
+            while (true) {
                 //获取解码数据
                 Data frame = recvFrame();
                 if (!frame.data) {

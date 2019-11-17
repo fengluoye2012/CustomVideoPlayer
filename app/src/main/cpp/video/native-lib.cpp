@@ -89,9 +89,9 @@ void initFFmpeg() {
     //初始化硬解码
     IPlayerProxy::get()->init();
 
-    //IPlayerProxy::get()->open("/sdcard/v1080.mp4");
-    IPlayerProxy::get()->open(
-            "http://dev.cdlianmeng.com/Fm4KJMvctkjfK6LJBB5o1MS0fQV1?sign=7a72a39428ff8ce0b74f288c1fa61091&t=5dcf679e");
+    IPlayerProxy::get()->open("/sdcard/v1080.mp4");
+//    IPlayerProxy::get()->open(
+//            "http://dev.cdlianmeng.com/Fm4KJMvctkjfK6LJBB5o1MS0fQV1?sign=7a72a39428ff8ce0b74f288c1fa61091&t=5dcf679e");
     IPlayerProxy::get()->start();
 
 

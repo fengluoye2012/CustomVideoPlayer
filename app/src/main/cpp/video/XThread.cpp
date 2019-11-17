@@ -33,14 +33,14 @@ void XThread::threadMain() {
 
 
 void XThread::stop() {
-    LOGI(TAG, "Stop 停止线程begin");
-    isExit = true;
-    for (int i = 0; i < 200; ++i) {
-        if (!isRunning) {
-            LOGI(TAG, "Stop 停止线程成功");
-            return;
-        }
-        XSleep(1);
-    }
-    LOGI(TAG, "Stop 停止线程超时");
+//    LOGI(TAG, "Stop 停止线程begin");
+//    isExit = true;
+//    for (int i = 0; i < 200; ++i) {
+//        if (!isRunning) {
+//            LOGI(TAG, "Stop 停止线程成功");
+//            return;
+//        }
+//        XSleep(1);
+//    }
+//    LOGI(TAG, "Stop 停止线程超时");
 }
