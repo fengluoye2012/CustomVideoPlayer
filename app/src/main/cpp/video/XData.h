@@ -25,7 +25,7 @@ struct XData {
     int height = 0;
     int format = 0;
 
-    bool Alloc(int size, const char *data = nullptr);
+    bool Alloc(int size, const char *data = 0);
     void Drop();
 };
 

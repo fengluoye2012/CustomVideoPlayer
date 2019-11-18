@@ -23,7 +23,7 @@ public:
     virtual ~SLAudioPlay();
 
 protected:
-    unsigned char *buf = nullptr;
+    unsigned char *buf = 0;
     std::mutex mux;
 };
 

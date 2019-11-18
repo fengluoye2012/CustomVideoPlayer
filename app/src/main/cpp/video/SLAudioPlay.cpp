@@ -27,7 +27,7 @@ SLAudioPlay::~SLAudioPlay() {
 static SLEngineItf createSL() {
     SLresult re;
     SLEngineItf en;
-    re = slCreateEngine(&engineSL, 0, nullptr, 0, nullptr, nullptr);
+    re = slCreateEngine(&engineSL, 0, 0, 0, 0, 0);
     if (re != SL_RESULT_SUCCESS) {
         return nullptr;
     }
@@ -130,7 +130,7 @@ bool SLAudioPlay::startPlay(XParameter out) {
 
     //2 创建混音器
     SLresult re = 0;
-    re = (*eng)->CreateOutputMix(eng, &mix, 0, nullptr, nullptr);
+    re = (*eng)->CreateOutputMix(eng, &mix, 0, 0, 0);
 
     if (re != SL_RESULT_SUCCESS) {
         mux.unlock();
@@ -147,7 +147,7 @@ bool SLAudioPlay::startPlay(XParameter out) {
     }
 
     SLDataLocator_OutputMix outmix = {SL_DATALOCATOR_OUTPUTMIX, mix};
-    SLDataSink audioSink = {&outmix, nullptr};
+    SLDataSink audioSink = {&outmix, 0};
 
     //3 配置音频信息
     //缓冲队列

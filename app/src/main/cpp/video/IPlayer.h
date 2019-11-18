@@ -38,17 +38,17 @@ public:
     //音频输出参数配置
     XParameter outPara;
 
-    IDemux *demux = nullptr;
-    IDecode *vDecode = nullptr;
-    IDecode *aDecode = nullptr;
-    IResample *resample = nullptr;
-    IVideoView *videoView = nullptr;
-    IAudioPlay *audioPlay = nullptr;
+    IDemux *demux = 0;
+    IDecode *vDecode = 0;
+    IDecode *aDecode = 0;
+    IResample *resample = 0;
+    IVideoView *videoView = 0;
+    IAudioPlay *audioPlay = 0;
 
 
 protected:
     //用作音视频同步
-    void main() override;
+    void main();
 
     IPlayer() {};
 

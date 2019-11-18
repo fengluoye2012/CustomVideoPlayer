@@ -20,8 +20,8 @@ public:
     virtual void close();
 
 protected:
-    void *view = nullptr;
-    XTexture *txt = nullptr;
+    void *view = 0;
+    XTexture *txt = 0;
     std::mutex mux;
 };
 

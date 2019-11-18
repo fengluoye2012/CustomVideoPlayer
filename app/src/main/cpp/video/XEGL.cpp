@@ -70,7 +70,7 @@ public:
         LOGE(TAG, "eglGetDisplay success");
 
         //2 初始化DisPlay
-        if (EGL_TRUE != eglInitialize(display, nullptr, nullptr)) {
+        if (EGL_TRUE != eglInitialize(display, 0, 0)) {
             mux.unlock();
             LOGE(TAG, "eglInitialize failed");
             return false;
@@ -95,7 +95,7 @@ public:
         }
         LOGE(TAG, "eglChooseConfig success");
 
-        surface = eglCreateWindowSurface(display, config, nwin, nullptr);
+        surface = eglCreateWindowSurface(display, config, nwin, 0);
 
         //4 打开并创建EGL上下文
         const EGLint ctxAttr[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};

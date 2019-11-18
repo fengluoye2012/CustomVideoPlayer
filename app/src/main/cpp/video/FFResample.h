@@ -19,7 +19,7 @@ public:
     virtual XData resample(XData inData);
 
 protected:
-    SwrContext *actx = nullptr;
+    SwrContext *actx = 0;
     std::mutex mux;
 };
 

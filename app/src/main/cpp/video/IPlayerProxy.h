@@ -28,7 +28,7 @@ public:
 protected:
     IPlayerProxy() {}
 
-    IPlayer *player = nullptr;
+    IPlayer *player = 0;
     std::mutex mux;
 
 };

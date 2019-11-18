@@ -29,7 +29,7 @@ bool FFDemux::open(const char *url) {
     close();
 
     mux.lock();
-    int ret = avformat_open_input(&ic, url, nullptr, nullptr);
+    int ret = avformat_open_input(&ic, url, 0, 0);
 
     if (ret != 0) {
         mux.unlock();
@@ -42,7 +42,7 @@ bool FFDemux::open(const char *url) {
     LOGI(TAG, "FFDemux open file %s success", url);
 
     //读取文件信息
-    ret = avformat_find_stream_info(ic, nullptr);
+    ret = avformat_find_stream_info(ic, 0);
 
     if (ret != 0) {
         mux.unlock();
@@ -74,7 +74,7 @@ XParameter FFDemux::getVPara() {
     }
 
     //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, nullptr, 0);
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
     if (index < 0) {
         mux.unlock();
         LOGI(TAG, "av_find_best_stream failed");
@@ -100,7 +100,7 @@ XParameter FFDemux::getAPara() {
     }
 
     //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, 0, 0);
     if (index < 0) {
         mux.unlock();
         LOGI(TAG, "av_find_best_stream failed");

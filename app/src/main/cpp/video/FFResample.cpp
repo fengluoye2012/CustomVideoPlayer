@@ -29,7 +29,7 @@ bool FFResample::open(XParameter in, XParameter out) {
     actx = swr_alloc();
     actx = swr_alloc_set_opts(actx, av_get_default_channel_layout(out.channels), AV_SAMPLE_FMT_S16,
                               out.sample_rate, av_get_default_channel_layout(in.para->channels),
-                              (AVSampleFormat) in.para->format, in.para->sample_rate, 0, nullptr);
+                              (AVSampleFormat) in.para->format, in.para->sample_rate, 0, 0);
 
     int re = swr_init(actx);
 
@@ -70,7 +70,7 @@ XData FFResample::resample(XData inData) {
     }
 
     out.Alloc(outSize);
-    uint8_t *outArr[2] = {nullptr};
+    uint8_t *outArr[2] = {0};
     outArr[0] = out.data;
     int len = swr_convert(actx, outArr, frame->nb_samples, (const uint8_t **) frame->data,
                           frame->nb_samples);

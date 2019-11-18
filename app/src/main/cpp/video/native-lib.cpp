@@ -65,7 +65,7 @@ jint registerNative(JNIEnv *env) {
 
 jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     mJvm = jvm;
-    JNIEnv *env = nullptr;
+    JNIEnv *env = 0;
     jint result = JNI_FALSE;
 
     //获取env指针；
@@ -73,7 +73,7 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
         return result;
     }
 
-    if (env == nullptr) {
+    if (!env) {
         return result;
     }
 
