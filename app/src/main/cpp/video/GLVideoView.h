@@ -13,8 +13,11 @@ class GLVideoView : public IVideoView {
 
 public:
     virtual void setRender(void *win);
+
     virtual void render(XData data);
+
     virtual void close();
+
 protected:
     void *view = 0;
     XTexture *txt = 0;

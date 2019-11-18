@@ -130,13 +130,13 @@ XData FFDemux::read() {
     AVPacket *pkt = av_packet_alloc();
     int ret = av_read_frame(ic, pkt);
 
-    LOGI(TAG, "av_read_frame code == %d", ret);
+    //LOGI(TAG, "av_read_frame code == %d", ret);
     if (ret != 0) {
         av_packet_free(&pkt);
         return XData();
     }
 
-    LOGI(TAG, "pack size is %d ptss %lld", pkt->size, pkt->pts);
+    //LOGI(TAG, "pack size is %d ptss %lld", pkt->size, pkt->pts);
 
     d.data = (unsigned char *) pkt;
     d.size = pkt->size;

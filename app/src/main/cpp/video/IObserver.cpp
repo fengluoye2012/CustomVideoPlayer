@@ -13,7 +13,7 @@ void IObserver::addObs(IObserver *obs) {
         return;
     }
 
-    LOGI(TAG, "IObserver::addObs");
+    LOGI(TAG, "IObserver::addObs==  %s", typeid(obs).name());
 
     mux.lock();
     //向尾部添加一个元素

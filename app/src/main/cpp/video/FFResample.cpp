@@ -82,7 +82,7 @@ XData FFResample::resample(XData inData) {
 
     out.pts = inData.pts;
     mux.unlock();
-    LOGE(TAG, "swr_convert success");
+    //LOGE(TAG, "swr_convert success");
     return out;
 }
 

@@ -9,6 +9,7 @@
 //由主体notify的数据
 void IDecode::update(XData pkt)
 {
+    //LOGI(TAG,"IDecode::update");  可以调用
     if(pkt.isAudio != isAudio)
     {
         return;

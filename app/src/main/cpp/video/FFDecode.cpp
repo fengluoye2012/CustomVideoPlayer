@@ -106,7 +106,7 @@ XData FFDecode::recvFrame()
         frame = av_frame_alloc();
     }
     int re = avcodec_receive_frame(codec,frame);
-    LOGI(TAG,"avcodec_receive_frame  == %d",re);
+    //LOGI(TAG,"avcodec_receive_frame  == %d",re);
     if(re != 0)
     {
         mux.unlock();
