@@ -3,7 +3,10 @@
 //
 
 #include "IVideoView.h"
+#include "LogUtils.h"
+#include "native-lib.h"
 
 void IVideoView::update(XData data) {
+    LOGI(TAG, "IVideoView::update");
     this->render(data);
 }

@@ -10,3 +10,6 @@ push_back：向尾部添加一个元素；
 
 cd /Users/mac/Library/Android/sdk/platform-tools
 ./adb logcat | /Users/mac/Library/Android/sdk/ndk-r17c/ndk-stack -sym /Users/mac/Desktop/APPDemo/FFMpegTest/app/src/main/jniLibs/armeabi-v7a
+
+
+3、nullptr 关键字：https://blog.csdn.net/Xiejingfa/article/details/50478512；

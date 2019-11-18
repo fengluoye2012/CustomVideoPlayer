@@ -67,9 +67,9 @@ void IDecode::main()
                 //获取解码数据
                 XData frame = recvFrame();
                 if(!frame.data) break;
-                //XLOGE("RecvFrame %d",frame.size);
                 pts = frame.pts;
                 //发送数据给观察者
+                //LOGI(TAG,"%s  ==调用notity", typeid(this).name());
                 this->notify(frame);
 
             }

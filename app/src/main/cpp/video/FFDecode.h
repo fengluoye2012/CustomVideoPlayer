@@ -12,13 +12,15 @@
 
 struct AVCodecContext;
 struct AVFrame;
-class FFDecode:public IDecode
-{
+
+class FFDecode : public IDecode {
 public:
     static void initHard(void *vm);
 
-    virtual bool open(XParameter para,bool isHard=false);
+    virtual bool open(XParameter para, bool isHard = false);
+
     virtual void close();
+
     //future模型 发送数据到线程解码
     virtual bool sendPacket(XData pkt);
 
@@ -30,7 +32,6 @@ protected:
     AVFrame *frame = 0;
     std::mutex mux;
 };
-
 
 
 #endif //CUSTOMVIDEOPLAYER_FFDECODE_H

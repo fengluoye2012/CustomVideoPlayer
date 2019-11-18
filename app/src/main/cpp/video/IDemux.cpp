@@ -10,9 +10,8 @@
 void IDemux::main() {
     while (!isExit) {
         XData data = read();
-
         if (data.size > 0) {
-            //LOGI(TAG,"IDemux::main");
+            //LOGI(TAG,"%s  ==调用notity", typeid(this).name());
             notify(data);
         }
     }
