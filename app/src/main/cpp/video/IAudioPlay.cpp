@@ -4,6 +4,7 @@
 
 #include "IAudioPlay.h"
 #include "LogUtils.h"
+#include "native-lib.h"
 
 XData IAudioPlay::getData() {
     XData d;
@@ -28,6 +29,8 @@ XData IAudioPlay::getData() {
 
 
 void IAudioPlay::update(XData data) {
+    //LOGI(TAG,"IAudioPlay::Update %d",data.pts);
+
     //压入缓冲队列
     if (data.size <= 0 || !data.data) {
         return;

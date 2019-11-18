@@ -7,34 +7,33 @@
 #include "LogUtils.h"
 #include "native-lib.h"
 
-void GLVideoView::setRender(void *win) {
+void GLVideoView::setRender(void *win)
+{
     view = win;
 }
-
-void GLVideoView::close() {
+void GLVideoView::close()
+{
     mux.lock();
-    if (txt) {
+    if(txt)
+    {
         txt->drop();
         txt = 0;
     }
+
     mux.unlock();
 }
+void GLVideoView::render(XData data)
+{
 
-void GLVideoView::render(XData data) {
-    LOGE(TAG,"view ");
-    if (!view) {
-        LOGE(TAG,"view == null");
-        return;
-    }
-
-    if (!txt) {
+    LOGI(TAG,"GLVideoView::render");
+    if(!view) return;
+    if(!txt)
+    {
         txt = XTexture::create();
-        txt->init(view, (XTextureType) data.format);
+
+        txt->init(view,(XTextureType)data.format);
     }
-
-    txt->draw(data.datas, data.width, data.height);
-
-    LOGI(TAG,"txt->draw ......");
+    txt->draw(data.datas,data.width,data.height);
 }
 
 

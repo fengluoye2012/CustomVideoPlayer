@@ -11,15 +11,10 @@
 class IVideoView : public IObserver {
 
 public:
-
     virtual void setRender(void *win) = 0;
-
     virtual void render(XData data) = 0;
-
     virtual void update(XData data);
-
     virtual void close() = 0;
 };
-
 
 #endif //CUSTOMVIDEOPLAYER_IVIDEOVIEW_H

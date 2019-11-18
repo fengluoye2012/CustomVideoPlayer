@@ -23,7 +23,6 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
 }
 
 void native_initView(JNIEnv *env, jobject obj, jobject surface) {
-    initFFmpeg();
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     IPlayerProxy::get()->initView(win);
 }
@@ -80,6 +79,7 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     //native方法注册
     registerNative(env);
 
+    initFFmpeg();
     result = JNI_VERSION_1_6;
     return result;
 }
@@ -88,10 +88,7 @@ void initFFmpeg() {
 
     //初始化硬解码
     IPlayerProxy::get()->init();
-
     IPlayerProxy::get()->open("/sdcard/v1080.mp4");
-//    IPlayerProxy::get()->open(
-//            "http://dev.cdlianmeng.com/Fm4KJMvctkjfK6LJBB5o1MS0fQV1?sign=7a72a39428ff8ce0b74f288c1fa61091&t=5dcf679e");
     IPlayerProxy::get()->start();
 
 
