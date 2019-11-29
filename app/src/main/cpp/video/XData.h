@@ -15,6 +15,9 @@ struct XData {
     int type = 0;
     int pts = 0;
 
+    //用于标记来源
+    const char * tag=0;
+
     unsigned char *data = 0;
     unsigned char *datas[8] = {0};
 

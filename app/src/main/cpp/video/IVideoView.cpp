@@ -6,8 +6,7 @@
 #include "LogUtils.h"
 #include "native-lib.h"
 
-void IVideoView::update(XData data)
-{
-    LOGI(TAG,"IVideoView::update ");//无法调用
+void IVideoView::update(XData data) {
+    LOGI(TAG, "IVideoView::update == %s", data.tag);
     this->render(data);
 }

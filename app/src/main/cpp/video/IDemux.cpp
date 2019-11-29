@@ -6,12 +6,18 @@
 #include "XData.h"
 #include "LogUtils.h"
 #include "native-lib.h"
+#include "cstring"
+#include "iostream"
+
+using namespace std;
+using std::string;
 
 void IDemux::main() {
+   string str =  string("IDemux");
     while (!isExit) {
         XData data = read();
         if (data.size > 0) {
-//            LOGI(TAG,"%s  ==调用notity", typeid(this).name());
+            data.tag = str.data();
             notify(data);
         }
     }

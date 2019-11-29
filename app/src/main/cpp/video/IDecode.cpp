@@ -9,7 +9,7 @@
 //由主体notify的数据
 void IDecode::update(XData pkt)
 {
-    //LOGI(TAG,"IDecode::update");  可以调用
+    LOGI(TAG,"IDecode::update== %s",pkt.tag); //tag =IDemux;
     if(pkt.isAudio != isAudio)
     {
         return;
@@ -70,7 +70,7 @@ void IDecode::main()
                 if(!frame.data) break;
                 pts = frame.pts;
                 //发送数据给观察者
-                //LOGI(TAG,"%s  ==调用notity", typeid(this).name());
+                frame.tag ="IDecode";
                 this->notify(frame);
 
             }

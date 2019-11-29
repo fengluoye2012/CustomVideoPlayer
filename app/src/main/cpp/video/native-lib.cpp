@@ -23,6 +23,8 @@ jstring native_stringFromJNI(JNIEnv *env, jobject obj) {
 }
 
 void native_initView(JNIEnv *env, jobject obj, jobject surface) {
+    initFFmpeg();
+
     ANativeWindow *win = ANativeWindow_fromSurface(env, surface);
     IPlayerProxy::get()->initView(win);
 }
@@ -79,7 +81,6 @@ jint  JNICALL JNI_OnLoad(JavaVM *jvm, void *res) {
     //native方法注册
     registerNative(env);
 
-    initFFmpeg();
     result = JNI_VERSION_1_6;
     return result;
 }

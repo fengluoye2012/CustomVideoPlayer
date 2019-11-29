@@ -7,6 +7,8 @@
 
 #include "XData.h"
 #include "IObserver.h"
+#include "LogUtils.h"
+#include "native-lib.h"
 
 class IVideoView : public IObserver {
 

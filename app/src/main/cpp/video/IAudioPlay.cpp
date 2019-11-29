@@ -29,7 +29,7 @@ XData IAudioPlay::getData() {
 
 
 void IAudioPlay::update(XData data) {
-    //LOGI(TAG,"IAudioPlay::Update %d",data.pts);//可以调用
+    LOGI(TAG,"IAudioPlay::Update == %s",data.tag); //tag == IResample
 
     //压入缓冲队列
     if (data.size <= 0 || !data.data) {

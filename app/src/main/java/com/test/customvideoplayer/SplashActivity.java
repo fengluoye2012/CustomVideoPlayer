@@ -19,6 +19,8 @@ public class SplashActivity extends AppCompatActivity {
 
         final Activity act = this;
 
+        setContentView(R.layout.activity_splash);
+
         RxPermissions permissions = new RxPermissions(this);
         Disposable disposable = permissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(new Consumer<Boolean>() {
             @Override

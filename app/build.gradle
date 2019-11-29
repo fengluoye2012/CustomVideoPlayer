@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation "io.reactivex.rxjava2:rxjava:2.2.14"
+    implementation 'com.blankj:utilcode:1.26.0'
 }

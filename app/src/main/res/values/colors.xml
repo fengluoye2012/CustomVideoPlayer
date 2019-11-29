@@ -3,4 +3,12 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="text_color_1">#ff8e42</color>
+
+    <!--半透明背景文字色-->
+    <color name="text_color_2">#ffffff</color>
+
+    <!--用户昵称，评论，一级二级三级标题色,赞踩分享等-->
+    <color name="text_color_3">#333333</color>
 </resources>
