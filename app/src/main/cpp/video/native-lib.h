@@ -18,6 +18,8 @@ jint registerNative(JNIEnv *env);
 
 void initFFmpeg();
 
+void testIView();
+
 static JavaVM *mJvm;
 
 

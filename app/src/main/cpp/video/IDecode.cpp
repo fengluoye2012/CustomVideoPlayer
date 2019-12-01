@@ -70,6 +70,7 @@ void IDecode::main()
                 if(!frame.data) break;
                 pts = frame.pts;
                 //发送数据给观察者
+                LOGI(TAG,"发送数据给观察者");
                 frame.tag ="IDecode";
                 this->notify(frame);
 

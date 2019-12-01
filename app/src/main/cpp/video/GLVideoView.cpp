@@ -25,7 +25,6 @@ void GLVideoView::close()
 void GLVideoView::render(XData data)
 {
 
-    LOGI(TAG,"GLVideoView::render");
     if(!view) return;
     if(!txt)
     {
