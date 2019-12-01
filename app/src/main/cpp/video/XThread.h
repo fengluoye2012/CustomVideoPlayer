@@ -6,13 +6,12 @@
 #define CUSTOMVIDEOPLAYER_XTHREAD_H
 
 
-//单位是毫秒
+//sleep 毫秒
 void XSleep(int mis);
 
+//c++ 11 线程库
 class XThread {
-
 public:
-
     //启动线程
     virtual bool start();
 
@@ -20,14 +19,14 @@ public:
     virtual void stop();
 
     //入口主函数
-    virtual void main() {};
+    virtual void main() {}
 
 protected:
     bool isExit = false;
-    bool isRunning = false;
-
+    bool isRuning = false;
 private:
-    void threadMain();
+    void ThreadMain();
+
 };
 
 
