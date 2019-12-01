@@ -41,10 +41,8 @@ bool FFDecode::open(XParameter para, bool isHard) {
 //    }
 
     if (!cd) {
-        LOGI(TAG, "avcodec_find_decoder %d failed", p->codec_id);
         return false;
     }
-    LOGI(TAG, "avcodec_find_decoder success");
 
     mux.lock();
     //2 创建解码上下文，并复制参数
@@ -67,7 +65,6 @@ bool FFDecode::open(XParameter para, bool isHard) {
         this->isAudio = true;
     }
     mux.unlock();
-    LOGI(TAG, "avcodec_open2 success");
     return true;
 }
 
@@ -97,7 +94,6 @@ XData FFDecode::recvFrame() {
         frame = av_frame_alloc();
     }
     int re = avcodec_receive_frame(codec, frame);
-    LOGI(TAG,"avcodec_receive_frame  == %d",re);
     if (re != 0) {
         mux.unlock();
         return XData();
