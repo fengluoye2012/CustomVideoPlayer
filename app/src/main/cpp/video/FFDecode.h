@@ -33,5 +33,4 @@ protected:
     std::mutex mux;
 };
 
-
 #endif //CUSTOMVIDEOPLAYER_FFDECODE_H
