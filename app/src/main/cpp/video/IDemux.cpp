@@ -13,12 +13,12 @@ using namespace std;
 using std::string;
 
 void IDemux::main() {
-   string str =  string("IDemux");
     while (!isExit) {
-        XData data = read();
-        if (data.size > 0) {
-            data.tag = str.data();
-            notify(data);
-        }
+
+        XData d = read();
+        if (d.size > 0)
+            notify(d);
+        //XLOGI("IDemux Read %d",d.size);
+        //if(d.size<=0)break;
     }
 }
