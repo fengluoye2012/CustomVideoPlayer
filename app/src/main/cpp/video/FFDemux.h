@@ -11,11 +11,9 @@
 struct AVFormatContext;
 
 class FFDemux : public IDemux {
-
 public:
 
-    //重写父类方法
-    //打开文件或者流媒体
+    //打开文件，或者流媒体 rmtp http rtsp
     virtual bool open(const char *url);
 
     virtual void close();
@@ -26,19 +24,16 @@ public:
     //获取音频参数
     virtual XParameter getAPara();
 
-
-    //读取一帧数据 数据由调用者清理
+    //读取一帧数据，数据由调用者清理
     virtual XData read();
 
-    //构造函数
     FFDemux();
 
 private:
     AVFormatContext *ic = 0;
+    std::mutex mux;
     int audioStream = 1;
     int videoStream = 0;
-    std::mutex mux;
 };
-
 
 #endif //CUSTOMVIDEOPLAYER_FFDEMUX_H
