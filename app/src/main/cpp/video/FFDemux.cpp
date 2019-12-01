@@ -11,114 +11,100 @@ extern "C" {
 }
 
 //分数转为浮点数
-static double r2q(AVRational r) {
+static double r2d(AVRational r) {
     return r.num == 0 || r.den == 0 ? 0. : (double) r.num / (double) r.den;
 }
 
 void FFDemux::close() {
     mux.lock();
-    if (ic) {
+    if (ic)
         avformat_close_input(&ic);
-    }
     mux.unlock();
 }
 
+
+//打开文件，或者流媒体 rmtp http rtsp
 bool FFDemux::open(const char *url) {
-
-    LOGI(TAG, "open file %s begin", url);
+    LOGI(TAG, "Open file %s begin", url);
     close();
-
     mux.lock();
-    int ret = avformat_open_input(&ic, url, 0, 0);
-
-    if (ret != 0) {
+    int re = avformat_open_input(&ic, url, 0, 0);
+    if (re != 0) {
         mux.unlock();
         char buf[1024] = {0};
-        LOGE(TAG, "open file %s failed", url);
-        av_strerror(ret, buf, sizeof(buf));
+        av_strerror(re, buf, sizeof(buf));
+        LOGI(TAG, "FFDemux open %s failed!", url);
         return false;
     }
-
-    LOGI(TAG, "FFDemux open file %s success", url);
+    LOGI(TAG, "FFDemux open %s success!", url);
 
     //读取文件信息
-    ret = avformat_find_stream_info(ic, 0);
-
-    if (ret != 0) {
+    re = avformat_find_stream_info(ic, 0);
+    if (re != 0) {
         mux.unlock();
         char buf[1024] = {0};
-        LOGI(TAG, "avformat_find_stream_info %s failed", url);
-        av_strerror(ret, buf, sizeof(buf));
+        av_strerror(re, buf, sizeof(buf));
+        LOGI(TAG, "avformat_find_stream_info %s failed!", url);
         return false;
     }
 
     this->totalMs = ic->duration / (AV_TIME_BASE / 1000);
 
     mux.unlock();
-    LOGI(TAG, "totalMs  == %d ", totalMs);
+    LOGI(TAG, "total ms = %d!", totalMs);
 
-    //获取音视频流下标
     getVPara();
     getAPara();
-
     return true;
 }
 
+//获取视频参数
 XParameter FFDemux::getVPara() {
-
     mux.lock();
     if (!ic) {
         mux.unlock();
-        LOGI(TAG, "AVFormatContext == null");
+        LOGI(TAG, "GetVPara failed! ic is NULL！");
         return XParameter();
     }
-
-    //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
-    if (index < 0) {
+    //获取了视频流索引
+    int re = av_find_best_stream(ic, AVMEDIA_TYPE_VIDEO, -1, -1, 0, 0);
+    if (re < 0) {
         mux.unlock();
-        LOGI(TAG, "av_find_best_stream failed");
+        LOGI(TAG, "av_find_best_stream failed!");
         return XParameter();
     }
-
-    videoStream = index;
-    LOGI(TAG, "视频流下标：：%d", index);
+    videoStream = re;
     XParameter para;
-    para.para = ic->streams[index]->codecpar;
+    para.para = ic->streams[re]->codecpar;
     mux.unlock();
     return para;
 }
 
-
+//获取音频参数
 XParameter FFDemux::getAPara() {
-
     mux.lock();
     if (!ic) {
         mux.unlock();
-        LOGI(TAG, "AVFormatContext == null");
+        LOGI(TAG, "GetVPara failed! ic is NULL！");
         return XParameter();
     }
-
-    //获取视频流
-    int index = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, 0, 0);
-    if (index < 0) {
+    //获取了音频流索引
+    int re = av_find_best_stream(ic, AVMEDIA_TYPE_AUDIO, -1, -1, 0, 0);
+    if (re < 0) {
         mux.unlock();
-        LOGI(TAG, "av_find_best_stream failed");
+        LOGI(TAG, "av_find_best_stream failed!");
         return XParameter();
     }
-
-    audioStream = index;
-    LOGI(TAG, "音频流下标：：%d", index);
+    audioStream = re;
     XParameter para;
-    para.para = ic->streams[index]->codecpar;
-    para.channels = ic->streams[index]->codecpar->channels;
-    para.sample_rate = ic->streams[index]->codecpar->sample_rate;
+    para.para = ic->streams[re]->codecpar;
+    para.channels = ic->streams[re]->codecpar->channels;
+    para.sample_rate = ic->streams[re]->codecpar->sample_rate;
     mux.unlock();
     return para;
-
 }
 
-//av_read_frame();
+//读取一帧数据，数据由调用者清理
 XData FFDemux::read() {
     mux.lock();
     if (!ic) {
@@ -128,23 +114,18 @@ XData FFDemux::read() {
 
     XData d;
     AVPacket *pkt = av_packet_alloc();
-    int ret = av_read_frame(ic, pkt);
-
-    //LOGI(TAG, "av_read_frame code == %d", ret);
-    if (ret != 0) {
+    int re = av_read_frame(ic, pkt);
+    if (re != 0) {
         av_packet_free(&pkt);
         return XData();
     }
-
-    //LOGI(TAG, "pack size is %d ptss %lld", pkt->size, pkt->pts);
-
+    //XLOGI("pack size is %d ptss %lld",pkt->size,pkt->pts);
     d.data = (unsigned char *) pkt;
     d.size = pkt->size;
-
     if (pkt->stream_index == audioStream) {
         d.isAudio = true;
     } else if (pkt->stream_index == videoStream) {
-        d.isAudio = true;
+        d.isAudio = false;
     } else {
         av_packet_free(&pkt);
         mux.unlock();
@@ -152,30 +133,28 @@ XData FFDemux::read() {
     }
 
     //转换pts
-    pkt->pts = pkt->pts * (1000 * r2q(ic->streams[pkt->stream_index]->time_base));
-    pkt->dts = pkt->dts * (1000 * r2q(ic->streams[pkt->stream_index]->time_base));
+    pkt->pts = pkt->pts * (1000 * r2d(ic->streams[pkt->stream_index]->time_base));
+    pkt->dts = pkt->dts * (1000 * r2d(ic->streams[pkt->stream_index]->time_base));
     d.pts = (int) pkt->pts;
-
+    //XLOGE("demux pts %d",d.pts);
     mux.unlock();
     return d;
 }
 
-FFDemux::FFDemux() {
 
+FFDemux::FFDemux() {
     static bool isFirst = true;
     if (isFirst) {
         isFirst = false;
-
         //注册所有封装器
         av_register_all();
 
         //注册所有的解码器
         avcodec_register_all();
 
-        //初始化网络，否则无法解码在线资源
+        //初始化网络
         avformat_network_init();
-        LOGI(TAG, "register success");
+        LOGI(TAG, "register ffmpeg!");
     }
 }
-
 
