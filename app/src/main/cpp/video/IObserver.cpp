@@ -14,24 +14,25 @@ using namespace std;
 using std::string;
 
 
+//主体函数 添加观察者
 void IObserver::addObs(IObserver *obs) {
     if (!obs) {
         return;
     }
+    LOGI(TAG, "IObserver::AddObs");
 
-    LOGI(TAG, "IObserver::addObs");
     mux.lock();
-    //向尾部添加一个元素
     obss.push_back(obs);
     mux.unlock();
-
 }
 
-
+//通知所有观察者
 void IObserver::notify(XData data) {
+
     mux.lock();
     for (int i = 0; i < obss.size(); i++) {
         obss[i]->update(data);
     }
     mux.unlock();
+
 }
