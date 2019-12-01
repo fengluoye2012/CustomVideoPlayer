@@ -11,26 +11,21 @@
 #include "XThread.h"
 
 
-//观察者和主体  继承线程
+//观察者 和 主体
 class IObserver : public XThread {
-
 public:
+    //观察者接收数据函数
+    virtual void update(XData data) {}
 
-    //观察者接受数据函数
-    virtual void update(XData data) {};
-
-    //主体函数 添加观察者（线程安全）
+    //主体函数 添加观察者(线程安全)
     void addObs(IObserver *obs);
 
-    //通知所有观察者（线程安全）
+    //通知所有观察者(线程安全)
     void notify(XData data);
 
 protected:
-    //vector 数据结构
     std::vector<IObserver *> obss;
-    //互斥锁
     std::mutex mux;
 };
-
 
 #endif //CUSTOMVIDEOPLAYER_IOBSERVER_H
